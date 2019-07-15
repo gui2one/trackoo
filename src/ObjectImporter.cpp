@@ -8,7 +8,8 @@ ofMesh ObjectImporter::loadFile(std::string file)
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_SortByPType |
-		aiProcess_GenNormals);
+		aiProcess_GenNormals 
+	);
 
 
 	if (!scene) {
@@ -43,8 +44,23 @@ ofMesh ObjectImporter::loadFile(std::string file)
 						for (size_t n_id = 0; n_id < ai_mesh->mNumVertices; n_id++)
 						{
 							mesh.addNormal(ofVec3f(ai_mesh->mNormals[n_id].x, ai_mesh->mNormals[n_id].y, ai_mesh->mNormals[n_id].z));
+							
 						}
 					}
+
+					if (ai_mesh->HasTextureCoords(0)) {
+						printf("Mesh has Textures Coordinates\n");
+						for (size_t vert_id = 0; vert_id < ai_mesh->mNumVertices; vert_id++)
+						{
+							ofVec2f coord = ofVec2f(ai_mesh->mTextureCoords[0][vert_id].x, ai_mesh->mTextureCoords[0][vert_id].y);
+							mesh.addTexCoord(coord);
+							//ofLog(OF_LOG_NOTICE, ofToString(coord));
+						}
+					}
+					else {
+						printf("Mesh has NO Textures Coordinates\n");
+					}
+
 					for (size_t face_id	= 0; face_id < ai_mesh->mNumFaces; face_id++)
 					{
 						for (size_t i = 0; i < ai_mesh->mFaces[face_id].mNumIndices; i++)

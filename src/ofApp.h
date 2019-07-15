@@ -60,6 +60,7 @@ class ofApp : public ofBaseApp{
 		ObjectImporter importer;
 
 		ofMesh test_mesh;
+		ofTexture texture;
 		std::vector<ofMesh> test_meshes;
 		std::vector<MeshObject> test_objects;
 

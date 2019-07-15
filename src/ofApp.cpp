@@ -65,6 +65,7 @@ void ofApp::setup(){
 	//test_mesh = importer.loadFile("data/pig_head.obj");
 	test_mesh = importer.loadFile("data/face_mask_1.fbx");
 	test_mesh.enableNormals();
+	test_mesh.enableTextures();
 
 	//std::vector<glm::vec3> normals = test_mesh.getNormals();	
 	//ofLog(OF_LOG_NOTICE, "normal 0 is : " + ofToString(normals));
@@ -76,6 +77,24 @@ void ofApp::setup(){
 	//camera.rotateAround(180.0, glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, 0.0, 0.0));
 	camera.setVFlip(true);
 
+	ofLoadImage(texture, "face_texture_1.png");
+
+	texture.setTextureWrap(GL_REPEAT, GL_REPEAT);
+	//texture.setTextureMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+	
+	
+	std::vector<glm::vec2> scaled_coords;
+	scaled_coords.reserve(test_mesh.getNumTexCoords());
+	for (auto in_coord : test_mesh.getTexCoords()) {
+		glm::vec2 coord;
+		coord.x = in_coord.x * 512;
+		coord.y = in_coord.y * 512.0;
+
+		scaled_coords.emplace_back(coord);
+	}
+
+	test_mesh.clearTexCoords();
+	test_mesh.addTexCoords(scaled_coords);
 	//rect_tracker.setMaximumDistance(200.0);
 	
 
@@ -168,17 +187,20 @@ void ofApp::draw(){
 	
 	ofEnableDepthTest();
 	light_1.enable();
+	ofDisableArbTex();
+	texture.bind();
 	camera.begin();
 	for (size_t i = 0; i < test_objects.size(); i++)
 	{
-		ofPushMatrix();
+		//ofPushMatrix();
 		
 		test_objects[i].draw();
 
-		ofPopMatrix();
+		//ofPopMatrix();
 	}
 
 	camera.end();
+	texture.unbind();
 	light_1.disable();
 	ofDisableDepthTest();
 
@@ -201,7 +223,9 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+	if (key == 'f') {
+		ofToggleFullscreen();
+	}
 }
 
 //--------------------------------------------------------------

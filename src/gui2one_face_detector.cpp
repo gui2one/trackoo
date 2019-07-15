@@ -263,19 +263,6 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 
 		}
 
-		// create transform Matrix
-		//ofMatrix4x4 of_matrix = ofMatrix4x4();
-
-		//of_matrix.rotate(rvec.at<double>(0, 0), 1.0, 0.0, 0.0);
-		//of_matrix.rotate(rvec.at<double>(0, 1), 0.0, 1.0, 0.0);
-		//of_matrix.rotate(rvec.at<double>(0, 2), 0.0, 0.0, 1.0);
-		//of_matrix.translate(tvec.at<double>(0, 0), tvec.at<double>(0, 1), tvec.at<double>(0, 2));
-
-		//
-
-		//
-
-		//matrices.push_back(of_matrix);
 	}
 
 	return tr_vectors;
