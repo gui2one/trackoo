@@ -60,6 +60,7 @@ class ofApp : public ofBaseApp{
 		std::vector<MeshObject> test_objects;
 
 		ofCamera camera;
+		std::string video_file_path;
 
 		ofLight light_1;
 

@@ -15,11 +15,12 @@ void ofApp::setup(){
 	gui.add(object_scale_slider.setup("Object Scale", 3.0, 0.5, 10.0));
 
 
-	grabber.initGrabber(w_width, w_height);
+	//grabber.initGrabber(w_width, w_height);
 
 	//video_player.load("Bill & Melinda Gates Talk Taxing The Wealthy.mp4");	
 	//video_player.load("'Brooklyn+Nine+Nine'+Cast+on+Being+Saved+by+NBC+_+Comic-Con+2018+_+TVLine.mp4");	
-	//video_player.play();
+	video_player.load(video_file_path);
+	video_player.play();
 
 	of_image.allocate(w_width, w_height, OF_IMAGE_COLOR);
 
@@ -50,11 +51,11 @@ void ofApp::update(){
 	
 	//video_player.update();
 
-	grabber.update();
-	if (grabber.isFrameNew())
+	video_player.update();
+	if (video_player.isFrameNew())
 	{
 
-		cv::Mat frame = ofxCv::toCv(grabber);
+		cv::Mat frame = ofxCv::toCv(video_player);
 		cv::Mat small = cv::Mat(360, 640, CV_8UC3);
 		ofxCv::resize(frame, small);
 		
@@ -78,7 +79,7 @@ void ofApp::draw(){
 	
 	//grabber.draw(0, 0,500,500);
 	//of_image.draw(0, 0, w_width, w_height);
-	grabber.draw(0, 0, w_width, w_height);
+	video_player.draw(0, 0, w_width, w_height);
 
 	
 
@@ -96,8 +97,8 @@ void ofApp::draw(){
 		//std::cout << tr.translates << std::endl;
 
 		ofQuaternion quat( 
-			tr.rotates.x / PI * 180.0, ofVec3f(1.0, 0.0, 0.0),			
 			tr.rotates.y / PI * 180.0, ofVec3f(0.0, 1.0, 0.0),
+			tr.rotates.x / PI * 180.0, ofVec3f(1.0, 0.0, 0.0),			
 			tr.rotates.z / PI * 180.0, ofVec3f(0.0, 0.0, 1.0)
 		);
 		

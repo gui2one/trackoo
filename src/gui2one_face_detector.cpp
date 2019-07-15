@@ -42,10 +42,10 @@ void Gui2oneFaceDetector::initEsitmateTransforms()
 	// 48 54     --> mouth outside corners
 	
 		//// houdini generated
-	//object_points2.push_back(cv::Vec3d(-0.001, -0.235, 0.265));
-	//object_points2.push_back(cv::Vec3d(0.106, -0.039, 0.725));
-	//object_points2.push_back(cv::Vec3d(0.892, -0.039, 0.725));
-	//object_points2.push_back(cv::Vec3d(0.999, -0.235, 0.265));
+	object_points2.push_back(cv::Vec3d(-0.001, -0.235, 0.265));
+	object_points2.push_back(cv::Vec3d(0.106, -0.039, 0.725));
+	object_points2.push_back(cv::Vec3d(0.892, -0.039, 0.725));
+	object_points2.push_back(cv::Vec3d(0.999, -0.235, 0.265));
 	object_points2.push_back(cv::Vec3d(0.131, 0.043, 0.099));
 	object_points2.push_back(cv::Vec3d(0.395, 0.197, 0.071));
 	object_points2.push_back(cv::Vec3d(0.603, 0.197, 0.071));
@@ -54,6 +54,7 @@ void Gui2oneFaceDetector::initEsitmateTransforms()
 	object_points2.push_back(cv::Vec3d(0.500, 0.295, 0.384));
 	object_points2.push_back(cv::Vec3d(0.327, 0.164, 0.650));
 	object_points2.push_back(cv::Vec3d(0.679, 0.152, 0.662));
+
 
 	
 }
@@ -65,7 +66,7 @@ std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFaces(cv::Mat& frame)
 	//printf("frame width : %d\n", frame.size().width);
 			
 	
-	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 1.0, cv::Size(640, 360), 100, false, false);
+	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 1.0, cv::Size(640, 360), 200, false, false);
 	m_dnn_net.setInput(inputBlob, "data");
 	cv::Mat detection = m_dnn_net.forward("detection_out");
 	cv::Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
@@ -78,7 +79,7 @@ std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFaces(cv::Mat& frame)
 	{
 
 		float confidence = detectionMat.at<float>(i, 2);
-		float confidenceThreshold = 0.5;
+		float confidenceThreshold = 0.9;
 		int frameWidth = frame.cols;
 		int frameHeight = frame.rows;
 		if (confidence > confidenceThreshold)
@@ -160,10 +161,10 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 
 		}
 
-		//image_points2.push_back(cv::Vec2d(d0.part( 0).x() , d0.part( 0).y()));
-		//image_points2.push_back(cv::Vec2d(d0.part (4).x() , d0.part( 4).y()));
-		//image_points2.push_back(cv::Vec2d(d0.part(12).x() , d0.part(12).y()));
-		//image_points2.push_back(cv::Vec2d(d0.part(16).x() , d0.part(16).y()));
+		image_points2.push_back(cv::Vec2d(d0.part( 0).x() , d0.part( 0).y()));
+		image_points2.push_back(cv::Vec2d(d0.part (4).x() , d0.part( 4).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(12).x() , d0.part(12).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(16).x() , d0.part(16).y()));
 		image_points2.push_back(cv::Vec2d(d0.part(17).x() , d0.part(17).y()));
 		image_points2.push_back(cv::Vec2d(d0.part(21).x() , d0.part(21).y()));
 		image_points2.push_back(cv::Vec2d(d0.part(22).x() , d0.part(22).y()));
@@ -207,8 +208,8 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 
 
 		//cv::solvePnP(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_EPNP);
-		//cv::solvePnP(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_UPNP);
-		cv::solvePnP(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_DLS);
+		cv::solvePnP(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_UPNP);
+		//cv::solvePnP(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_DLS);
 		//cv::solvePnPRansac(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , 100, 8.0, 0.999999, cv::noArray(), cv::SOLVEPNP_UPNP );
 
 		// Black magic: The x axis in the rotation vector needs to get flipped.
