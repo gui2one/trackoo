@@ -2,17 +2,54 @@
 static ofRectangle dlib_rect_to_of(dlib::rectangle _rect) {
 	return ofRectangle(_rect.left(), _rect.top(), _rect.width(), _rect.height());
 }
+
+static std::vector<ofRectangle> dlib_rects_to_of(std::vector<dlib::rectangle> _rects) {
+	std::vector<ofRectangle> result;
+	for (auto rect : _rects) {
+		ofRectangle of_rect( rect.left(), rect.top(), rect.width(), rect.height());
+		result.push_back(of_rect);
+	}
+	return result;
+}
+
+static std::vector<dlib::rectangle> cv_rects_to_dlib(std::vector<cv::Rect> _rects) {
+
+	std::vector<dlib::rectangle> dlib_rects;
+
+	for (auto cv_rect : _rects) {
+		dlib::rectangle dlib_rect(cv_rect.x, cv_rect.y, cv_rect.width, cv_rect.height);
+
+		dlib_rects.push_back(dlib_rect);
+	}
+
+	return dlib_rects;
+
+}
+
+static std::vector<cv::Rect> dlib_rects_to_cv(std::vector<dlib::rectangle> _rects) {
+	std::vector<cv::Rect> result;
+	for (auto rect : _rects) {
+		cv::Rect cv_rect(rect.left(), rect.top(), rect.width(), rect.height());
+		result.push_back(cv_rect);
+	}
+	return result;
+}
+
+
 //--------------------------------------------------------------
 void ofApp::setup(){
 
 	w_width = 640;
 	w_height = 360;
 
+	proc_width = 640;
+	proc_height = 360;
+
 	gui.setup();
 
-	gui.add(z_offset_slider.setup("Z offset", 375.0, -500.0, 500.0));
-	gui.add(aov_slider.setup("AOV", 45.0, 0.01, 120.0));
-	gui.add(object_scale_slider.setup("Object Scale", 3.0, 0.5, 10.0));
+	gui.add(z_offset_slider.setup("Z offset", 280, -500.0, 500.0));
+	gui.add(aov_slider.setup("AOV", 120.0, 0.01, 120.0));
+	gui.add(object_scale_slider.setup("Object Scale", 2.2, 0.5, 10.0));
 
 
 	//grabber.initGrabber(w_width, w_height);
@@ -23,13 +60,13 @@ void ofApp::setup(){
 	video_player.play();
 
 	of_image.allocate(w_width, w_height, OF_IMAGE_COLOR);
+	
 
 	//test_mesh = importer.loadFile("data/pig_head.obj");
 	test_mesh = importer.loadFile("data/face_mask_1.fbx");
 	test_mesh.enableNormals();
 
-	std::vector<glm::vec3> normals = test_mesh.getNormals();
-	
+	//std::vector<glm::vec3> normals = test_mesh.getNormals();	
 	//ofLog(OF_LOG_NOTICE, "normal 0 is : " + ofToString(normals));
 	
 
@@ -39,9 +76,9 @@ void ofApp::setup(){
 	//camera.rotateAround(180.0, glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, 0.0, 0.0));
 	camera.setVFlip(true);
 
+	//rect_tracker.setMaximumDistance(200.0);
 	
 
-	
 	
 }
 
@@ -56,12 +93,21 @@ void ofApp::update(){
 	{
 
 		cv::Mat frame = ofxCv::toCv(video_player);
-		cv::Mat small = cv::Mat(360, 640, CV_8UC3);
+		cv::Mat small = cv::Mat(proc_height, proc_width, CV_8UC3);
 		ofxCv::resize(frame, small);
 		
 		rectangles.clear();
 		rectangles = face_detector.detectFaces(small);
-		std::vector<dlib::full_object_detection> dets = face_detector.detectLandmarks(rectangles, small);
+		rect_tracker.track(dlib_rects_to_cv(rectangles));
+
+		std::vector<dlib::rectangle> current_rects;
+		for (auto label : rect_tracker.getCurrentLabels()) {
+			auto cv_rect = rect_tracker.getCurrent(label);
+			auto dlib_rect = dlib::rectangle(cv_rect.x, cv_rect.y, cv_rect.x + cv_rect.width, cv_rect.y + cv_rect.height);
+
+			current_rects.push_back(dlib_rect);
+		}
+		std::vector<dlib::full_object_detection> dets = face_detector.detectLandmarks(current_rects, small);
 		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, aov_slider, false);
 
 		face_detector.cvRenderFacesLandmarks(small, dets);
@@ -110,7 +156,7 @@ void ofApp::draw(){
 		obj.setMesh(&test_mesh);
 		
 		obj.setScale(1000.0* object_scale_slider);
-		obj.setPosition(ofVec3f((tr.translates.x  * w_width ) + w_width / 2.0 , (tr.translates.y  * w_height/(1.0/(float(w_width)/ w_height))) + w_height / 2.0, (-tr.translates.z) * z_offset_slider));
+		obj.setPosition(ofVec3f((tr.translates.x  * proc_width ) + proc_width / 2.0 , (tr.translates.y  * proc_height/(1.0/(float(proc_width)/ proc_height))) + proc_height / 2.0, (-tr.translates.z) * z_offset_slider));
 		obj.setOrientation(quat);
 
 		
@@ -137,10 +183,18 @@ void ofApp::draw(){
 	ofDisableDepthTest();
 
 	ofNoFill();
+	ofSetColor(255, 30, 30);
 	for (size_t rect_id = 0; rect_id < rectangles.size(); rect_id++)
 	{
-		ofDrawRectangle(dlib_rect_to_of(rectangles[rect_id]));
+		//ofDrawRectangle(dlib_rect_to_of(rectangles[rect_id]));
+		for (auto label : rect_tracker.getCurrentLabels()) {
+
+			auto cv_rect = rect_tracker.getCurrent(label);
+			ofDrawRectangle(ofRectangle(cv_rect.x, cv_rect.y, cv_rect.width, cv_rect.height));
+			ofDrawBitmapStringHighlight("face id : " + ofToString(label), glm::vec2(cv_rect.x, cv_rect.y));
+		}
 	}
+	ofSetColor(255, 255, 255);
 	ofFill();
 	gui.draw();
 }

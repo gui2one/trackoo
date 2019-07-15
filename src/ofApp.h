@@ -40,11 +40,15 @@ class ofApp : public ofBaseApp{
 		ofVideoPlayer video_player;
 		ofImage of_image;
 
-		int w_width , w_height;
+		int w_width , w_height, proc_width, proc_height;
+
 		std::vector<ofMatrix4x4> matrices;
 		std::vector<TransformVectors> tr_vectors;
 		
+
+		ofxCv::Tracker<cv::Rect> rect_tracker;
 		std::vector<dlib::rectangle> rectangles;
+		std::vector<dlib::rectangle> current_rectangles;
 		
 
 
