@@ -1,15 +1,12 @@
 #pragma once
 
+
 #include "ofMain.h"
 #include "gui2one_face_detector.h"
 #include "ofxCv.h"
 #include "ofxGui.h"
 
 #include "ofxImGui.h"
-
-//#include "assimp/Importer.hpp"
-//#include "assimp/scene.h"
-//#include "assimp/postprocess.h"
 
 #include "ObjectImporter.h"
 #include "MeshObject.h"
@@ -70,6 +67,11 @@ class ofApp : public ofBaseApp{
 
 		ofLight light_1;
 
+<<<<<<< HEAD
 		ofxImGui::Gui im_gui;
+=======
+
+		//ofxImGui::Gui im_gui;
+>>>>>>> 6208b84cc787267df40627223661043f00bd9347
 		
 };

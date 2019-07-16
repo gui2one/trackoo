@@ -84,6 +84,7 @@
     <GenerateManifest>true</GenerateManifest>
     <LibraryPath>D:\CODE\CPP_libs\dlib-install\lib;D:\CODE\CPP_libs\opencv-3.4.6\build\install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;$(ExecutablePath)</ExecutablePath>
+    <ReferencePath>D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin\</OutDir>
@@ -96,6 +97,7 @@
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>D:\CODE\CPP_libs\dlib-install\lib;D:\CODE\CPP_libs\opencv-3.4.6\build\install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;$(ExecutablePath)</ExecutablePath>
+    <ReferencePath>D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -135,9 +137,12 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <AdditionalDependencies>assimp-vc141-mt.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_ts346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src;D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs;D:\of_v0.10.1_vs2017_release\addons\ofxImGui\src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -169,7 +174,13 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>D:\CODE\CPP_libs\assimp-install\include;%(AdditionalIncludeDirectories);D:\CODE\CPP_libs\dlib-install\include;D:\CODE\CPP_libs\opencv-3.4.6\build\install\include;src;..\..\..\addons\ofxCv\libs\ofxCv\include;..\..\..\addons\ofxCv\libs\CLD\include\CLD;..\..\..\addons\ofxCv\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxImGui\libs\imgui\src;..\..\..\addons\ofxImGui\libs</AdditionalIncludeDirectories>
+=======
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxCv\libs\ofxCv\include;..\..\..\addons\ofxCv\libs\CLD\include\CLD;..\..\..\addons\ofxCv\src;..\..\..\addons\ofxGui\src;
+D:\of_v0.10.1_vs2017_release\addons\ofxImGui\src;
+D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDirectories>
+>>>>>>> 6208b84cc787267df40627223661043f00bd9347
       <CompileAs>CompileAsCpp</CompileAs>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
@@ -180,10 +191,12 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>assimp-vc141-mt.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_ts346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src;D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs;D:\of_v0.10.1_vs2017_release\addons\ofxImGui\src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\addons\ofxImGui\libs\imgui\src\imgui.cpp" />
