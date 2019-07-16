@@ -5,6 +5,7 @@
 #include "ofxCv.h"
 #include "ofxGui.h"
 
+#include "ofxImGui.h"
 
 //#include "assimp/Importer.hpp"
 //#include "assimp/scene.h"
@@ -69,6 +70,6 @@ class ofApp : public ofBaseApp{
 
 		ofLight light_1;
 
-		
+		ofxImGui::Gui im_gui;
 		
 };

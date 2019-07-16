@@ -98,6 +98,10 @@ void ofApp::setup(){
 	//rect_tracker.setMaximumDistance(200.0);
 	
 
+
+	im_gui.setup();
+
+	ImGui::GetIO().MouseDrawCursor = false;
 	
 }
 
@@ -219,6 +223,19 @@ void ofApp::draw(){
 	ofSetColor(255, 255, 255);
 	ofFill();
 	gui.draw();
+
+
+	im_gui.begin();
+	{
+		ImGui::Begin("first panel");
+		ImGui::Text("hello there !!!!");
+		ImGui::End();
+	}
+
+	im_gui.end();
+
+
+
 }
 
 //--------------------------------------------------------------
