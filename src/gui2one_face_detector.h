@@ -28,10 +28,11 @@ struct TransformVectors {
 class Gui2oneFaceDetector
 {
 public:
-	Gui2oneFaceDetector();
+	Gui2oneFaceDetector(int w = 640, int h = 480);
+	
 	~Gui2oneFaceDetector();
 
-
+	void setProcessSize(int w, int h);
 	void initCvDnnNet(std::string  proto, std::string caffe_model);
 	void initDlibShapePredictor(std::string landmarks_model);
 
@@ -43,6 +44,8 @@ public:
 	void cvRenderFacesLandmarks(cv::Mat _frame, std::vector<dlib::full_object_detection>& shapes);
 	
 	std::vector<TransformVectors> estimateTransforms(const std::vector<dlib::full_object_detection>& detections, std::vector<dlib::rectangle> rectangles, cv::Mat& _frame,float desired_aov, bool draw_infos = true);
+
+	int proc_width, proc_height;
 
 	dlib::shape_predictor pose_model;
 

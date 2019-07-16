@@ -6,7 +6,9 @@
 #include "ofxCv.h"
 #include "ofxGui.h"
 
-#include "ofxImGui.h"
+//#include "ofxImGui.h"
+
+#include "GuiApp.h"
 
 #include "ObjectImporter.h"
 #include "MeshObject.h"
@@ -31,6 +33,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+
+		shared_ptr<ofBaseGLRenderer> gl;
 
 		Gui2oneFaceDetector face_detector;
 
@@ -67,6 +71,6 @@ class ofApp : public ofBaseApp{
 
 		ofLight light_1;
 
-		ofxImGui::Gui im_gui;
+		shared_ptr<GuiApp> im_gui;
 		
 };

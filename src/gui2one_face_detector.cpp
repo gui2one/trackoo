@@ -2,13 +2,22 @@
 
 
 
-Gui2oneFaceDetector::Gui2oneFaceDetector()
+Gui2oneFaceDetector::Gui2oneFaceDetector(int w, int h)
 {
+
+	proc_width = w;
+	proc_height = h;
+
 	initCvDnnNet("./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel");
 	initDlibShapePredictor("./data/shape_predictor_68_face_landmarks.dat");
 	initEsitmateTransforms();
 }
 
+void Gui2oneFaceDetector::setProcessSize(int w, int h) 
+{
+	proc_width = w;
+	proc_height = h;
+}
 
 Gui2oneFaceDetector::~Gui2oneFaceDetector()
 {
@@ -42,18 +51,18 @@ void Gui2oneFaceDetector::initEsitmateTransforms()
 	// 48 54     --> mouth outside corners
 	
 		//// houdini generated
-	object_points2.push_back(cv::Vec3d(-0.001, -0.235, 0.265));
-	object_points2.push_back(cv::Vec3d(0.106, -0.039, 0.725));
-	object_points2.push_back(cv::Vec3d(0.892, -0.039, 0.725));
-	object_points2.push_back(cv::Vec3d(0.999, -0.235, 0.265));
-	object_points2.push_back(cv::Vec3d(0.131, 0.043, 0.099));
-	object_points2.push_back(cv::Vec3d(0.395, 0.197, 0.071));
-	object_points2.push_back(cv::Vec3d(0.603, 0.197, 0.071));
-	object_points2.push_back(cv::Vec3d(0.867, 0.043, 0.099));
-	object_points2.push_back(cv::Vec3d(0.499, 0.203, 0.186));
-	object_points2.push_back(cv::Vec3d(0.500, 0.295, 0.384));
-	object_points2.push_back(cv::Vec3d(0.327, 0.164, 0.650));
-	object_points2.push_back(cv::Vec3d(0.679, 0.152, 0.662));
+	object_points2.push_back(cv::Vec3d(0.012, -0.536, 0.265)); //point id 0
+	object_points2.push_back(cv::Vec3d(0.116, -0.340, 0.725)); //point id 4
+	object_points2.push_back(cv::Vec3d(0.882, -0.340, 0.725)); //point id 12
+	object_points2.push_back(cv::Vec3d(0.986, -0.536, 0.265)); //point id 16
+	object_points2.push_back(cv::Vec3d(0.141, -0.259, 0.099)); //point id 17
+	object_points2.push_back(cv::Vec3d(0.398, -0.104, 0.071)); //point id 21
+	object_points2.push_back(cv::Vec3d(0.601, -0.104, 0.071)); //point id 22
+	object_points2.push_back(cv::Vec3d(0.858, -0.259, 0.099)); //point id 26
+	object_points2.push_back(cv::Vec3d(0.499, -0.098, 0.186)); //point id 27
+	object_points2.push_back(cv::Vec3d(0.500, -0.007, 0.384)); //point id 30
+	object_points2.push_back(cv::Vec3d(0.332, -0.138, 0.650)); //point id 48
+	object_points2.push_back(cv::Vec3d(0.675, -0.149, 0.662)); //point id 54
 
 
 	
@@ -66,7 +75,7 @@ std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFaces(cv::Mat& frame)
 	//printf("frame width : %d\n", frame.size().width);
 			
 	
-	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 1.0, cv::Size(640, 360), 200, false, false);
+	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 1.0, cv::Size(proc_width, proc_height), 200, false, false);
 	m_dnn_net.setInput(inputBlob, "data");
 	cv::Mat detection = m_dnn_net.forward("detection_out");
 	cv::Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
@@ -176,13 +185,13 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 
 		// make camera matrix
 		cv::Mat cam_mat = cv::Mat::eye(3, 3, CV_64F);
-		cam_mat.at<double>(0, 0) = 640.0;
+		cam_mat.at<double>(0, 0) = (float)proc_width;
 		cam_mat.at<double>(1, 0) = 0.0;
-		cam_mat.at<double>(2, 0) = 640.0/2.0;
+		cam_mat.at<double>(2, 0) = (float)proc_width/2.0;
 
 		cam_mat.at<double>(0, 1) = 0.0;
-		cam_mat.at<double>(1, 1) = 360.0;
-		cam_mat.at<double>(2, 1) = 360.0/2.0;
+		cam_mat.at<double>(1, 1) = (float)proc_height;
+		cam_mat.at<double>(2, 1) = (float)proc_height /2.0;
 
 		cam_mat.at<double>(0, 2) = 0.0;
 		cam_mat.at<double>(1, 2) = 0.0;
@@ -190,9 +199,9 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 
 
 		float aov = desired_aov;
-		float focalLength = 360.0 * ofDegToRad(aov);
-		float opticalCenterX = 640.0 / 2.0;
-		float opticalCenterY = 360.0 / 2.0;
+		float focalLength = (float)proc_height * ofDegToRad(aov);
+		float opticalCenterX = (float)proc_width / 2.0;
+		float opticalCenterY = (float)proc_height / 2.0;
 
 		cv::Mat1d projectionMat = cv::Mat::zeros(3, 3, CV_32F);
 		

@@ -39,23 +39,20 @@ static std::vector<cv::Rect> dlib_rects_to_cv(std::vector<dlib::rectangle> _rect
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+
+
 	w_width = 640;
 	w_height = 360;
 
-	proc_width = 640;
-	proc_height = 360;
+	proc_width = 500;
+	proc_height = (int)((float)proc_width / (16.0/9.0));
 
-	gui.setup();
+	face_detector.setProcessSize(proc_width, proc_height);
 
-	gui.add(z_offset_slider.setup("Z offset", 280, -500.0, 500.0));
-	gui.add(aov_slider.setup("AOV", 120.0, 0.01, 120.0));
-	gui.add(object_scale_slider.setup("Object Scale", 2.2, 0.5, 10.0));
-
+	//ofSetVerticalSync(false);
 
 	//grabber.initGrabber(w_width, w_height);
-
-	//video_player.load("Bill & Melinda Gates Talk Taxing The Wealthy.mp4");	
-	//video_player.load("'Brooklyn+Nine+Nine'+Cast+on+Being+Saved+by+NBC+_+Comic-Con+2018+_+TVLine.mp4");	
+	
 	video_player.load(video_file_path);
 	video_player.play();
 
@@ -67,9 +64,6 @@ void ofApp::setup(){
 	test_mesh.enableNormals();
 	test_mesh.enableTextures();
 
-	//std::vector<glm::vec3> normals = test_mesh.getNormals();	
-	//ofLog(OF_LOG_NOTICE, "normal 0 is : " + ofToString(normals));
-	
 
 	light_1.setPointLight();
 	light_1.enable();
@@ -99,14 +93,16 @@ void ofApp::setup(){
 	
 
 
-	im_gui.setup();
+	//im_gui.setup();
 
-	ImGui::GetIO().MouseDrawCursor = false;
+	//ImGui::GetIO().MouseDrawCursor = false;
 	
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+	
 
 	
 	//video_player.update();
@@ -131,7 +127,7 @@ void ofApp::update(){
 			current_rects.push_back(dlib_rect);
 		}
 		std::vector<dlib::full_object_detection> dets = face_detector.detectLandmarks(current_rects, small);
-		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, aov_slider, false);
+		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, 300.0, false);
 
 		face_detector.cvRenderFacesLandmarks(small, dets);
 		//printf("matrices num = %d\n", matrices.size());
@@ -145,11 +141,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-	
-	//grabber.draw(0, 0,500,500);
-	//of_image.draw(0, 0, w_width, w_height);
-	video_player.draw(0, 0, w_width, w_height);
-
+	gl->draw(video_player, 0, 0, w_width, w_height);
 	
 
 
@@ -157,13 +149,8 @@ void ofApp::draw(){
 	
 	for(size_t i=0; i < tr_vectors.size(); i++)
 	{
-
 		
 		TransformVectors tr = tr_vectors[i];
-		
-
-		
-		//std::cout << tr.translates << std::endl;
 
 		ofQuaternion quat( 
 			tr.rotates.y / PI * 180.0, ofVec3f(0.0, 1.0, 0.0),
@@ -172,70 +159,64 @@ void ofApp::draw(){
 		);
 		
 
-		//box.setGlobalOrientation(orientation);
-		//box.rotate(orientation);
-		
 		MeshObject obj;
 		obj.setMesh(&test_mesh);
 		
-		obj.setScale(1000.0* object_scale_slider);
-		obj.setPosition(ofVec3f((tr.translates.x  * proc_width ) + proc_width / 2.0 , (tr.translates.y  * proc_height/(1.0/(float(proc_width)/ proc_height))) + proc_height / 2.0, (-tr.translates.z) * z_offset_slider));
+		obj.setScale(1000.0* im_gui->global_scale);
+		obj.setPosition(ofVec3f((tr.translates.x  * proc_width ) + proc_width / 2.0 , (tr.translates.y  * proc_height/(1.0/(float(proc_width)/ proc_height))) + proc_height / 2.0, (-tr.translates.z) * im_gui->z_offset));
 		obj.setOrientation(quat);
 
 		
 
 		test_objects.push_back(obj);
-		
 
 	}
 	
+	if (tr_vectors.size() > 0) {
+
+		im_gui->plot_values.insert(im_gui->plot_values.begin(), tr_vectors[0].rotates.x / PI  * 180.0);
+	}
+	
+
 	ofEnableDepthTest();
 	light_1.enable();
-	ofDisableArbTex();
-	texture.bind();
+	
+	
+	gl->bind(texture, 0);
 	camera.begin();
 	for (size_t i = 0; i < test_objects.size(); i++)
 	{
 		//ofPushMatrix();
-		
-		test_objects[i].draw();
-
+		gl->draw(test_objects[i]);
 		//ofPopMatrix();
 	}
 
 	camera.end();
-	texture.unbind();
+	
+	gl->unbind(texture,0);
 	light_1.disable();
 	ofDisableDepthTest();
 
-	ofNoFill();
-	ofSetColor(255, 30, 30);
-	for (size_t rect_id = 0; rect_id < rectangles.size(); rect_id++)
-	{
-		//ofDrawRectangle(dlib_rect_to_of(rectangles[rect_id]));
-		for (auto label : rect_tracker.getCurrentLabels()) {
+	gl->setFillMode(OF_OUTLINE);
 
-			auto cv_rect = rect_tracker.getCurrent(label);
-			ofDrawRectangle(ofRectangle(cv_rect.x, cv_rect.y, cv_rect.width, cv_rect.height));
-			ofDrawBitmapStringHighlight("face id : " + ofToString(label), glm::vec2(cv_rect.x, cv_rect.y));
-		}
-	}
-	ofSetColor(255, 255, 255);
-	ofFill();
-	gui.draw();
+	
+	float width_ratio = (float)w_width / (float)proc_width;
+	float height_ratio = (float)w_height / (float)proc_height;
+	for (auto label : rect_tracker.getCurrentLabels()) {
 
+		auto cv_rect = rect_tracker.getCurrent(label);
+		gl->setColor(255, 30, 30);
+		gl->drawRectangle(cv_rect.x * width_ratio, cv_rect.y * height_ratio, 0.0, cv_rect.width * width_ratio,	 cv_rect.height * height_ratio);
+		
+		gl->setColor(255, 255, 255);
+		gl->drawString("face id : " + ofToString(label), cv_rect.x * width_ratio, cv_rect.y * height_ratio, 0.0);
 
-	im_gui.begin();
-	{
-		ImGui::Begin("first panel");
-		ImGui::Text("hello there !!!!");
-		ImGui::End();
 	}
 
-	im_gui.end();
+	gl->setColor(255, 255, 255);
+	gl->setFillMode(OF_FILLED);
 
-
-
+	gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
 }
 
 //--------------------------------------------------------------
