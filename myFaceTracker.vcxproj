@@ -174,13 +174,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-<<<<<<< HEAD
       <AdditionalIncludeDirectories>D:\CODE\CPP_libs\assimp-install\include;%(AdditionalIncludeDirectories);D:\CODE\CPP_libs\dlib-install\include;D:\CODE\CPP_libs\opencv-3.4.6\build\install\include;src;..\..\..\addons\ofxCv\libs\ofxCv\include;..\..\..\addons\ofxCv\libs\CLD\include\CLD;..\..\..\addons\ofxCv\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxImGui\libs\imgui\src;..\..\..\addons\ofxImGui\libs</AdditionalIncludeDirectories>
-=======
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxCv\libs\ofxCv\include;..\..\..\addons\ofxCv\libs\CLD\include\CLD;..\..\..\addons\ofxCv\src;..\..\..\addons\ofxGui\src;
-D:\of_v0.10.1_vs2017_release\addons\ofxImGui\src;
-D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDirectories>
->>>>>>> 6208b84cc787267df40627223661043f00bd9347
       <CompileAs>CompileAsCpp</CompileAs>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
