@@ -67,11 +67,6 @@ class ofApp : public ofBaseApp{
 
 		ofLight light_1;
 
-<<<<<<< HEAD
 		ofxImGui::Gui im_gui;
-=======
-
-		//ofxImGui::Gui im_gui;
->>>>>>> 6208b84cc787267df40627223661043f00bd9347
 		
 };
