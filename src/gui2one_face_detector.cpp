@@ -61,6 +61,10 @@ void Gui2oneFaceDetector::initEsitmateTransforms()
 	object_points2.push_back(cv::Vec3d(0.858, -0.259, 0.099)); //point id 26
 	object_points2.push_back(cv::Vec3d(0.499, -0.098, 0.186)); //point id 27
 	object_points2.push_back(cv::Vec3d(0.500, -0.007, 0.384)); //point id 30
+	object_points2.push_back(cv::Vec3d(0.188, -0.258, 0.209)); //point id 36
+	object_points2.push_back(cv::Vec3d(0.386, -0.210, 0.216)); //point id 39
+	object_points2.push_back(cv::Vec3d(0.612, -0.210, 0.216)); //point id 42
+	object_points2.push_back(cv::Vec3d(0.810, -0.258, 0.209)); //point id 45
 	object_points2.push_back(cv::Vec3d(0.332, -0.138, 0.650)); //point id 48
 	object_points2.push_back(cv::Vec3d(0.675, -0.149, 0.662)); //point id 54
 
@@ -75,7 +79,7 @@ std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFaces(cv::Mat& frame)
 	//printf("frame width : %d\n", frame.size().width);
 			
 	
-	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 1.0, cv::Size(proc_width, proc_height), 200, false, false);
+	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 2.0, cv::Size(proc_width, proc_height), 100, false, false);
 	m_dnn_net.setInput(inputBlob, "data");
 	cv::Mat detection = m_dnn_net.forward("detection_out");
 	cv::Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
@@ -121,9 +125,12 @@ std::vector<dlib::full_object_detection> Gui2oneFaceDetector::detectLandmarks
 	cv::Mat _frame
 )
 {
+	cv::Mat big;
+	//cv::pyrUp(_frame, big);
 	// convert cv::Mat to dlib format
 	dlib::cv_image<dlib::bgr_pixel> cimg(_frame);
 
+	
 	std::vector<dlib::full_object_detection> shapes;
 	for (unsigned long i = 0; i < _rectangles.size(); ++i)
 	{
@@ -140,7 +147,7 @@ void Gui2oneFaceDetector::cvRenderFacesLandmarks(cv::Mat _frame , std::vector<dl
 	for (size_t i = 0; i < shapes.size(); i++)
 	{
 		dlib::full_object_detection& shape = shapes[i];
-		cv::drawMarker(_frame, cv::Point(shape.part(0).x(), shape.part(0).y()), cv::Scalar(20, 255, 255, 255));
+		cv::drawMarker(_frame, cv::Point(shape.part( 0).x(), shape.part( 0).y()), cv::Scalar(20, 255, 255, 255));
 		cv::drawMarker(_frame, cv::Point(shape.part(16).x(), shape.part(16).y()), cv::Scalar(20, 255, 255, 255));
 		cv::drawMarker(_frame, cv::Point(shape.part(36).x(), shape.part(36).y()), cv::Scalar(20, 255, 255, 255));
 		cv::drawMarker(_frame, cv::Point(shape.part(45).x(), shape.part(45).y()), cv::Scalar(20, 255, 255, 255));
@@ -170,18 +177,22 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 
 		}
 
-		image_points2.push_back(cv::Vec2d(d0.part( 0).x() , d0.part( 0).y()));
-		image_points2.push_back(cv::Vec2d(d0.part (4).x() , d0.part( 4).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(12).x() , d0.part(12).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(16).x() , d0.part(16).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(17).x() , d0.part(17).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(21).x() , d0.part(21).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(22).x() , d0.part(22).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(26).x() , d0.part(26).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(27).x() , d0.part(27).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(30).x() , d0.part(30).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(48).x() , d0.part(48).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(54).x() , d0.part(54).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(0).x(), d0.part(0).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(4).x(), d0.part(4).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(12).x(), d0.part(12).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(16).x(), d0.part(16).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(17).x(), d0.part(17).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(21).x(), d0.part(21).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(22).x(), d0.part(22).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(26).x(), d0.part(26).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(27).x(), d0.part(27).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(30).x(), d0.part(30).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(36).x(), d0.part(36).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(39).x(), d0.part(39).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(42).x(), d0.part(42).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(45).x(), d0.part(45).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(48).x(), d0.part(48).y()));
+		image_points2.push_back(cv::Vec2d(d0.part(54).x(), d0.part(54).y()));
 
 		// make camera matrix
 		cv::Mat cam_mat = cv::Mat::eye(3, 3, CV_64F);

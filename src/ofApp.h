@@ -4,16 +4,30 @@
 #include "ofMain.h"
 #include "gui2one_face_detector.h"
 #include "ofxCv.h"
-#include "ofxGui.h"
 
-//#include "ofxImGui.h"
+
+
 
 #include "GuiApp.h"
 
 #include "ObjectImporter.h"
 #include "MeshObject.h"
 
-//#include "glm/gtx/matrix_decompose.hpp"
+
+class my_type : public ofxCv::RectFollower, TransformVectors {
+
+public:
+
+	
+	void my_setup() {
+		//std::cout << "follower setup " <<  getLabel() << std::endl;
+	}
+
+private:
+
+};
+
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -48,16 +62,15 @@ class ofApp : public ofBaseApp{
 		std::vector<TransformVectors> tr_vectors;
 		
 
-		ofxCv::Tracker<cv::Rect> rect_tracker;
+		//ofxCv::Tracker<cv::Rect> rect_tracker;
+		ofxCv::TrackerFollower< cv::Rect, my_type> rect_tracker;
 		std::vector<dlib::rectangle> rectangles;
 		std::vector<dlib::rectangle> current_rectangles;
 		
 
 
-		ofxPanel gui;
-		ofxFloatSlider z_offset_slider;
-		ofxFloatSlider aov_slider;
-		ofxFloatSlider object_scale_slider;
+		
+
 
 		ObjectImporter importer;
 

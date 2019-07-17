@@ -11,7 +11,7 @@ public:
 
 	ofxImGui::Gui gui;
 
-	float z_offset = 200.0;
+	float z_offset = 76.0;
 	float global_scale = 1.0;
 
 	std::vector<float> plot_values;

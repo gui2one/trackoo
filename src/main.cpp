@@ -3,6 +3,11 @@
 #include "GuiApp.h"
 #include "ofAppGLFWWindow.h"
 
+
+#define DLIB_USE_CUDA
+//#define OPENCV_USE_CUDA
+
+
 //========================================================================
 int main(int argc, char* argv[]) {
 	//ofSetupOpenGL(640,360,OF_WINDOW);			// <-------- setup the GL context

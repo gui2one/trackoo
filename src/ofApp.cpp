@@ -44,7 +44,7 @@ void ofApp::setup(){
 	w_width = 640;
 	w_height = 360;
 
-	proc_width = 500;
+	proc_width = 520;
 	proc_height = (int)((float)proc_width / (16.0/9.0));
 
 	face_detector.setProcessSize(proc_width, proc_height);
@@ -89,10 +89,12 @@ void ofApp::setup(){
 
 	test_mesh.clearTexCoords();
 	test_mesh.addTexCoords(scaled_coords);
-	//rect_tracker.setMaximumDistance(200.0);
+
+	rect_tracker.setMaximumDistance(200.0);
+	rect_tracker.setPersistence(10);
 	
 
-
+	std::cout << "cuda devices : " << cv::cuda::getCudaEnabledDeviceCount() << std::endl;
 	//im_gui.setup();
 
 	//ImGui::GetIO().MouseDrawCursor = false;
@@ -118,7 +120,7 @@ void ofApp::update(){
 		rectangles.clear();
 		rectangles = face_detector.detectFaces(small);
 		rect_tracker.track(dlib_rects_to_cv(rectangles));
-
+		
 		std::vector<dlib::rectangle> current_rects;
 		for (auto label : rect_tracker.getCurrentLabels()) {
 			auto cv_rect = rect_tracker.getCurrent(label);
@@ -127,7 +129,7 @@ void ofApp::update(){
 			current_rects.push_back(dlib_rect);
 		}
 		std::vector<dlib::full_object_detection> dets = face_detector.detectLandmarks(current_rects, small);
-		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, 300.0, false);
+		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, 180.0, false);
 
 		face_detector.cvRenderFacesLandmarks(small, dets);
 		//printf("matrices num = %d\n", matrices.size());
@@ -153,9 +155,9 @@ void ofApp::draw(){
 		TransformVectors tr = tr_vectors[i];
 
 		ofQuaternion quat( 
-			tr.rotates.y / PI * 180.0, ofVec3f(0.0, 1.0, 0.0),
-			tr.rotates.x / PI * 180.0, ofVec3f(1.0, 0.0, 0.0),			
-			tr.rotates.z / PI * 180.0, ofVec3f(0.0, 0.0, 1.0)
+			ofRadToDeg(tr.rotates.x), ofVec3f(1.0, 0.0, 0.0),
+			ofRadToDeg(tr.rotates.y), ofVec3f(0.0, 1.0, 0.0),
+			ofRadToDeg(tr.rotates.z), ofVec3f(0.0, 0.0, 1.0)
 		);
 		
 
@@ -210,6 +212,14 @@ void ofApp::draw(){
 		
 		gl->setColor(255, 255, 255);
 		gl->drawString("face id : " + ofToString(label), cv_rect.x * width_ratio, cv_rect.y * height_ratio, 0.0);
+
+	}
+
+	std::vector<my_type> followers = rect_tracker.getFollowers();
+	for (size_t i = 0; i < followers.size(); i++) {
+		gl->drawRectangle(i * 50, 40, 0, 40, 40);
+		followers[i].my_setup();
+
 
 	}
 

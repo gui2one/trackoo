@@ -18,9 +18,10 @@ public:
 			m_mesh_ptr->draw();
 			//m_mesh_ptr->drawWireframe();
 			ofDisableLighting();
+			ofDrawAxis(1.0);
 		}
 
-		//ofDrawAxis(1.0);
+		
 	}
 
 	inline void setMesh(ofMesh * mesh_ptr) {
