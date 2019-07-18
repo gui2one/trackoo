@@ -78,8 +78,9 @@ std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFaces(cv::Mat& frame)
 
 	//printf("frame width : %d\n", frame.size().width);
 			
+	cv::Mat grey;
 	
-	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 2.0, cv::Size(proc_width, proc_height), 100, false, false);
+	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 2.0, cv::Size(proc_width, proc_height), 200, false, false);
 	m_dnn_net.setInput(inputBlob, "data");
 	cv::Mat detection = m_dnn_net.forward("detection_out");
 	cv::Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
@@ -194,25 +195,29 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 		image_points2.push_back(cv::Vec2d(d0.part(48).x(), d0.part(48).y()));
 		image_points2.push_back(cv::Vec2d(d0.part(54).x(), d0.part(54).y()));
 
-		// make camera matrix
-		cv::Mat cam_mat = cv::Mat::eye(3, 3, CV_64F);
-		cam_mat.at<double>(0, 0) = (float)proc_width;
-		cam_mat.at<double>(1, 0) = 0.0;
-		cam_mat.at<double>(2, 0) = (float)proc_width/2.0;
-
-		cam_mat.at<double>(0, 1) = 0.0;
-		cam_mat.at<double>(1, 1) = (float)proc_height;
-		cam_mat.at<double>(2, 1) = (float)proc_height /2.0;
-
-		cam_mat.at<double>(0, 2) = 0.0;
-		cam_mat.at<double>(1, 2) = 0.0;
-		cam_mat.at<double>(2, 2) = 1.0;
 
 
+
+		float aspect_ratio = (float)proc_width / (float)proc_height;
 		float aov = desired_aov;
-		float focalLength = (float)proc_height * ofDegToRad(aov);
+		float focalLength = (float)proc_width * ofDegToRad(aov);
 		float opticalCenterX = (float)proc_width / 2.0;
 		float opticalCenterY = (float)proc_height / 2.0;
+		
+
+		// make camera matrix
+		cv::Mat cam_mat = cv::Mat::eye(3, 3, CV_64F);
+		cam_mat.at<double>(0, 0) = focalLength;
+		cam_mat.at<double>(0, 1) = 0.0;
+		cam_mat.at<double>(0, 2) = opticalCenterX;
+
+		cam_mat.at<double>(1, 0) = 0.0;
+		cam_mat.at<double>(1, 1) = focalLength;
+		cam_mat.at<double>(1, 2) = opticalCenterY;
+
+		cam_mat.at<double>(2, 0) = 0.0;
+		cam_mat.at<double>(2, 1) = 0.0;
+		cam_mat.at<double>(2, 2) = 1.0;
 
 		cv::Mat1d projectionMat = cv::Mat::zeros(3, 3, CV_32F);
 		
@@ -227,10 +232,20 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 		cv::Mat tvec = cv::Mat::zeros(3, 1, CV_64F);
 
 
-		//cv::solvePnP(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_EPNP);
-		cv::solvePnP(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_UPNP);
-		//cv::solvePnP(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_DLS);
-		//cv::solvePnPRansac(object_points2, image_points2, projectionMat, cv::noArray(), rvec, tvec, false , 100, 8.0, 0.999999, cv::noArray(), cv::SOLVEPNP_UPNP );
+		cv::Mat1d dist_coeffs = cv::Mat::zeros(5, 1, CV_32F);
+
+		//// example coefficients found here :https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html
+		dist_coeffs(0, 0) =  4.1802327176423804e-001;
+		dist_coeffs(1, 0) = -5.0715244063187526e-001;
+		dist_coeffs(2, 0) = 0.0;
+		dist_coeffs(3, 0) = 0.0;
+		dist_coeffs(4, 0) = 5.7843597214487474e-001;
+
+
+		//cv::solvePnP(object_points2, image_points2, cam_mat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_EPNP);
+		cv::solvePnP(object_points2, image_points2, cam_mat, dist_coeffs, rvec, tvec, false , cv::SOLVEPNP_UPNP);
+		//cv::solvePnP(object_points2, image_points2, cam_mat, cv::noArray(), rvec, tvec, false , cv::SOLVEPNP_DLS);
+		//cv::solvePnPRansac(object_points2, image_points2, cam_mat, cv::noArray(), rvec, tvec, false , 100, 8.0, 0.999999, cv::noArray(), cv::SOLVEPNP_UPNP );
 
 		// Black magic: The x axis in the rotation vector needs to get flipped.
 		double * r = rvec.ptr<double>(0);

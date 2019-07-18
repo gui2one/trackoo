@@ -129,7 +129,7 @@ void ofApp::update(){
 			current_rects.push_back(dlib_rect);
 		}
 		std::vector<dlib::full_object_detection> dets = face_detector.detectLandmarks(current_rects, small);
-		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, 180.0, false);
+		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, im_gui->aov, false);
 
 		face_detector.cvRenderFacesLandmarks(small, dets);
 		//printf("matrices num = %d\n", matrices.size());
@@ -165,8 +165,8 @@ void ofApp::draw(){
 		obj.setMesh(&test_mesh);
 		
 		obj.setScale(1000.0* im_gui->global_scale);
-		obj.setPosition(ofVec3f((tr.translates.x  * proc_width ) + proc_width / 2.0 , (tr.translates.y  * proc_height/(1.0/(float(proc_width)/ proc_height))) + proc_height / 2.0, (-tr.translates.z) * im_gui->z_offset));
 		obj.setOrientation(quat);
+		obj.setPosition(ofVec3f((tr.translates.x  * proc_width ) + proc_width / 2.0 , (tr.translates.y  * proc_height/(1.0/(float(proc_width)/ proc_height))) + proc_height / 2.0, (-tr.translates.z) * im_gui->z_offset));
 
 		
 
