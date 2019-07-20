@@ -1,3 +1,3 @@
-ofxGui
-ofxCv
 ofxImGui
+ofxCv
+

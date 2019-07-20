@@ -49,7 +49,6 @@ void ofApp::setup(){
 
 	face_detector.setProcessSize(proc_width, proc_height);
 
-	//ofSetVerticalSync(false);
 
 	//grabber.initGrabber(w_width, w_height);
 	
@@ -66,7 +65,7 @@ void ofApp::setup(){
 
 
 	light_1.setPointLight();
-	light_1.enable();
+	//light_1.enable();
 	camera.setFarClip(30000.0);
 	//camera.rotateAround(180.0, glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, 0.0, 0.0));
 	camera.setVFlip(true);
@@ -123,6 +122,7 @@ void ofApp::update(){
 		
 		std::vector<dlib::rectangle> current_rects;
 		for (auto label : rect_tracker.getCurrentLabels()) {
+
 			auto cv_rect = rect_tracker.getCurrent(label);
 			auto dlib_rect = dlib::rectangle(cv_rect.x, cv_rect.y, cv_rect.x + cv_rect.width, cv_rect.y + cv_rect.height);
 
@@ -132,12 +132,15 @@ void ofApp::update(){
 		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, im_gui->aov, false);
 
 		face_detector.cvRenderFacesLandmarks(small, dets);
-		//printf("matrices num = %d\n", matrices.size());
-		ofxCv::toOf(small, of_image);
-		of_image.update();
+		
+		//ofxCv::toOf(small, of_image);
+		//of_image.update();
 
 		
 	}
+
+
+	
 }
 
 //--------------------------------------------------------------
@@ -162,6 +165,7 @@ void ofApp::draw(){
 		
 
 		MeshObject obj;
+		obj.renderer = gl;
 		obj.setMesh(&test_mesh);
 		
 		obj.setScale(1000.0* im_gui->global_scale);
@@ -176,12 +180,15 @@ void ofApp::draw(){
 	
 	if (tr_vectors.size() > 0) {
 
-		im_gui->plot_values.insert(im_gui->plot_values.begin(), tr_vectors[0].rotates.x / PI  * 180.0);
+		im_gui->plot_values_rx.insert(im_gui->plot_values_rx.begin(), tr_vectors[0].rotates.x / PI  * 180.0);
+		im_gui->plot_values_ry.insert(im_gui->plot_values_ry.begin(), tr_vectors[0].rotates.y / PI  * 180.0);
+		im_gui->plot_values_rz.insert(im_gui->plot_values_rz.begin(), tr_vectors[0].rotates.z / PI  * 180.0);
+		
 	}
 	
 
 	ofEnableDepthTest();
-	light_1.enable();
+	//light_1.enable();
 	
 	
 	gl->bind(texture, 0);
@@ -189,6 +196,7 @@ void ofApp::draw(){
 	for (size_t i = 0; i < test_objects.size(); i++)
 	{
 		//ofPushMatrix();
+		gl->setColor(255, 255, 255);
 		gl->draw(test_objects[i]);
 		//ofPopMatrix();
 	}
@@ -196,7 +204,7 @@ void ofApp::draw(){
 	camera.end();
 	
 	gl->unbind(texture,0);
-	light_1.disable();
+	//light_1.disable();
 	ofDisableDepthTest();
 
 	gl->setFillMode(OF_OUTLINE);
@@ -216,8 +224,19 @@ void ofApp::draw(){
 	}
 
 	std::vector<my_type> followers = rect_tracker.getFollowers();
+
 	for (size_t i = 0; i < followers.size(); i++) {
-		gl->drawRectangle(i * 50, 40, 0, 40, 40);
+
+		int _label = followers[i].getLabel();
+		if (rect_tracker.existsCurrent(_label)) {
+
+			cv::Rect _rect = rect_tracker.getCurrent(_label);
+			gl->setColor(0, 255, 0);
+			gl->drawRectangle(_rect.x, _rect.y, 0, _rect.width, _rect.height);
+		}
+		else {
+			//gl->setColor(255, 0, 0);
+		}
 		followers[i].my_setup();
 
 

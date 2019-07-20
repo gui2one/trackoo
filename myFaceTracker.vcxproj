@@ -84,7 +84,8 @@
     <GenerateManifest>true</GenerateManifest>
     <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
-    <ReferencePath>D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src;$(ReferencePath)</ReferencePath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <IncludePath>D:\CODE\CPP_libs\opencv-3.4.6-install\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\assimp-install\include;D:\of_v0.10.1_vs2017_release\apps\myApps\myFaceTracker\src\libs\tinyfiledialog;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin\</OutDir>
@@ -97,7 +98,8 @@
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
-    <ReferencePath>D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src;$(ReferencePath)</ReferencePath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <IncludePath>D:\CODE\CPP_libs\opencv-3.4.6-install\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\assimp-install\include;D:\of_v0.10.1_vs2017_release\apps\myApps\myFaceTracker\src\libs\tinyfiledialog;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -132,7 +134,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>D:\CODE\CPP_libs\assimp-install\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\opencv-3.4.6-install\include;src;..\..\..\addons\ofxCv\libs\ofxCv\include;..\..\..\addons\ofxCv\libs\CLD\include\CLD;..\..\..\addons\ofxCv\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxImGui\libs\imgui\src;..\..\..\addons\ofxImGui\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>assimp-vc141-mt.lib dlib19.17.99_release_64bit_msvc1916.lib opencv_calib3d346.lib opencv_core346.lib opencv_dnn346.lib opencv_features2d346.lib opencv_flann346.lib opencv_highgui346.lib opencv_imgcodecs346.lib opencv_imgproc346.lib opencv_ml346.lib opencv_objdetect346.lib opencv_photo346.lib opencv_shape346.lib opencv_stitching346.lib opencv_superres346.lib opencv_video346.lib opencv_videoio346.lib opencv_videostab346.lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -142,7 +144,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <AdditionalDependencies>assimp-vc141-mt.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src;D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs;D:\of_v0.10.1_vs2017_release\addons\ofxImGui\src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
     <ProjectReference>
@@ -184,7 +186,14 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>D:\CODE\CPP_libs\assimp-install\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\opencv-3.4.6-install\include;src;..\..\..\addons\ofxCv\libs\ofxCv\include;..\..\..\addons\ofxCv\libs\CLD\include\CLD;..\..\..\addons\ofxCv\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxImGui\libs\imgui\src;..\..\..\addons\ofxImGui\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);
+src;
+..\..\..\addons\ofxCv\libs\ofxCv\include;
+..\..\..\addons\ofxCv\libs\CLD\include\CLD;
+..\..\..\addons\ofxCv\src;
+..\..\..\addons\ofxGui\src;
+D:\of_v0.10.1_vs2017_release\addons\ofxImGui\src;
+D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
@@ -195,7 +204,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalLibraryDirectories>D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src;D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs;D:\of_v0.10.1_vs2017_release\addons\ofxImGui\src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp-vc141-mt.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent />
@@ -217,6 +226,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
     <ClCompile Include="..\..\..\addons\ofxImGui\src\Helpers.cpp" />
     <ClCompile Include="..\..\..\addons\ofxImGui\src\ofxImGuiLoggerChannel.cpp" />
     <ClCompile Include="src\GuiApp.cpp" />
+    <ClCompile Include="src\libs\tinyfiledialog\tinyfiledialogs.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MeshObject.cpp" />
     <ClCompile Include="src\ObjectImporter.cpp" />
@@ -235,16 +245,6 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
     <ClCompile Include="..\..\..\addons\ofxCv\libs\ofxCv\src\Tracker.cpp" />
     <ClCompile Include="..\..\..\addons\ofxCv\libs\ofxCv\src\Utilities.cpp" />
     <ClCompile Include="..\..\..\addons\ofxCv\libs\ofxCv\src\Wrappers.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxButton.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxColorPicker.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxInputField.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxLabel.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxPanel.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSlider.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\addons\ofxImGui\libs\imgui\src\imgui.h" />
@@ -264,6 +264,8 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
     <ClInclude Include="..\..\..\addons\ofxImGui\src\ofxImGui.h" />
     <ClInclude Include="..\..\..\addons\ofxImGui\src\ofxImGuiLoggerChannel.h" />
     <ClInclude Include="src\GuiApp.h" />
+    <ClInclude Include="src\libs\tinyfiledialog\tinyfiledialogs.h" />
+    <ClInclude Include="src\libs\tinyfiledialog\zlib.h" />
     <ClInclude Include="src\MeshObject.h" />
     <ClInclude Include="src\ObjectImporter.h" />
     <ClInclude Include="src\ofApp.h" />
@@ -284,17 +286,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
     <ClInclude Include="..\..\..\addons\ofxCv\libs\ofxCv\include\ofxCv\Tracker.h" />
     <ClInclude Include="..\..\..\addons\ofxCv\libs\ofxCv\include\ofxCv\Utilities.h" />
     <ClInclude Include="..\..\..\addons\ofxCv\libs\ofxCv\include\ofxCv\Wrappers.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxButton.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxColorPicker.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxGui.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxInputField.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxLabel.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxPanel.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSlider.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h" />
-    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h" />
+    <ClInclude Include="src\ofxThreadedFileDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">

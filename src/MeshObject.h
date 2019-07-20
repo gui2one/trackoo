@@ -12,13 +12,14 @@ public:
 	virtual void customDraw() {
 		//ofSphere(0, 0, 0, 100.0);
 		if (m_mesh_ptr != nullptr) {
-			ofDisableArbTex();
-			ofEnableLighting();
+			//ofDisableArbTex();
 			
-			m_mesh_ptr->draw();
+			renderer->draw(*m_mesh_ptr, OF_MESH_FILL);
+			//m_mesh_ptr->draw();
 			//m_mesh_ptr->drawWireframe();
-			ofDisableLighting();
-			ofDrawAxis(1.0);
+			
+			renderer->drawAxis(1.0);
+			
 		}
 
 		
@@ -31,6 +32,8 @@ public:
 	inline ofMesh * getMeshPtr() {
 		return m_mesh_ptr;
 	}
+
+	shared_ptr<ofBaseGLRenderer> renderer;
 
 private:
 

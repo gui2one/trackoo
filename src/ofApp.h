@@ -5,14 +5,10 @@
 #include "gui2one_face_detector.h"
 #include "ofxCv.h"
 
-
-
-
 #include "GuiApp.h"
 
 #include "ObjectImporter.h"
 #include "MeshObject.h"
-
 
 class my_type : public ofxCv::RectFollower, TransformVectors {
 
@@ -20,7 +16,10 @@ public:
 
 	
 	void my_setup() {
+		
 		//std::cout << "follower setup " <<  getLabel() << std::endl;
+		
+
 	}
 
 private:
@@ -66,10 +65,6 @@ class ofApp : public ofBaseApp{
 		ofxCv::TrackerFollower< cv::Rect, my_type> rect_tracker;
 		std::vector<dlib::rectangle> rectangles;
 		std::vector<dlib::rectangle> current_rectangles;
-		
-
-
-		
 
 
 		ObjectImporter importer;
