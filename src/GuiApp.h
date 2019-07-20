@@ -12,9 +12,11 @@
 class GuiApp : public ofBaseApp
 {
 public:
+
 	void setup();
 	void update();
 	void draw();
+
 
 
 
@@ -22,6 +24,7 @@ public:
 	bool loadFromTextFile(std::string path);
 
 	void openSaveFileDialog();
+	void openLoadFileDialog();
 	void onFileDialogResponse(ofxThreadedFileDialogResponse &response);
 
 

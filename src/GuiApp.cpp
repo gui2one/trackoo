@@ -49,6 +49,7 @@ void GuiApp::setup()
 	}
 
 
+
 }
 
 
@@ -78,7 +79,7 @@ void GuiApp::draw()
 			openSaveFileDialog();
 		}
 		if (ImGui::Button("Load From File")) {
-			loadFromTextFile("save_params.txt");
+			openLoadFileDialog();
 		}
 
 		ImGui::DragFloat("Z Offset", &z_offset, 0.1f, -500.0f, 500.0f);
@@ -174,7 +175,12 @@ bool GuiApp::loadFromTextFile(std::string path)
 
 void GuiApp::openSaveFileDialog()
 {
-	fileDialog.saveFile("save file", "save file as", "testing.txt");
+	fileDialog.saveFile("save file", "save file as", "param_save_01.txt");
+}
+
+void GuiApp::openLoadFileDialog()
+{
+	fileDialog.openFile("load file", "load saved Parameters");
 }
 
 void GuiApp::onFileDialogResponse(ofxThreadedFileDialogResponse & response)
@@ -183,6 +189,9 @@ void GuiApp::onFileDialogResponse(ofxThreadedFileDialogResponse & response)
 
 		ofLogNotice("response : "+ response.filepath);
 		saveToTextFile(response.filepath);
+	}
+	else if (response.id == "load file") {
+		loadFromTextFile(response.filepath);
 	}
 	
 }
