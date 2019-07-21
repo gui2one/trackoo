@@ -8,6 +8,13 @@
 //#define OPENCV_USE_CUDA
 
 
+
+void windowCloseCallBkack(GLFWwindow * _window) {
+
+	std::cout << "closing" << std::endl;
+	glfwSetWindowShouldClose(_window, false);
+
+}
 //========================================================================
 int main(int argc, char* argv[]) {
 	//ofSetupOpenGL(640,360,OF_WINDOW);			// <-------- setup the GL context
@@ -19,7 +26,7 @@ int main(int argc, char* argv[]) {
 	std::string video_file_path = "";
 	if (argc < 2) {
 
-		printf("no arguments given\n");
+		printf("no arguments given ... \nI need some aaarggss man ...\n");
 	}
 	else {
 
@@ -39,8 +46,8 @@ int main(int argc, char* argv[]) {
 	settings.setSize(640, 360);
 	settings.setPosition(ofVec2f(500,100));
 	settings.resizable = true;
-	settings.decorated = false;
-	shared_ptr<ofAppBaseWindow> main_window = ofCreateWindow(settings);
+	settings.decorated = true;
+	shared_ptr<ofAppGLFWWindow> main_window = static_pointer_cast<ofAppGLFWWindow>(ofCreateWindow(settings));
 	
 	settings.setSize(400, 400);
 	settings.setPosition(ofVec2f(0, 100));
@@ -60,6 +67,12 @@ int main(int argc, char* argv[]) {
 	
 	ofRunApp(gui_window, guiApp);
 	ofRunApp(main_window, mainApp);
+
+
+	GLFWwindow * glfw_main = main_window->getGLFWWindow();
+
+	glfwSetWindowCloseCallback(glfw_main, windowCloseCallBkack);
+
 
 	ofRunMainLoop();
 	
