@@ -46,8 +46,20 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+		void exit();
+
+		bool my_exit();
+
+
+
+
+		
+		
+
+		
 
 		shared_ptr<ofBaseGLRenderer> gl;
+		ofGLFWWindowSettings settings;
 
 		Gui2oneFaceDetector face_detector;
 

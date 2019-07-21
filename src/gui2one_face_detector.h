@@ -20,11 +20,25 @@
 #include <glm/vec3.hpp>
 
 #include "ofMain.h"
-
+#include "ofxCv.h"
 struct TransformVectors {
 	ofVec3f translates;
 	ofVec3f rotates;
 };
+
+class gui2oneFaceDetectorInstance : public cv::Rect {
+
+public:
+	TransformVectors vectors;
+
+};
+
+class MyFollower : public ofxCv::RectFollower
+{
+	public:
+		// code here
+};
+
 class Gui2oneFaceDetector
 {
 public:
@@ -49,14 +63,15 @@ public:
 
 	dlib::shape_predictor pose_model;
 
-	cv::Mat object_points; 
-	cv::Mat image_points; 
 	
 	std::vector<cv::Vec3d> object_points2;
 	std::vector<cv::Vec2d> image_points2;
 
 	
 	cv::dnn::experimental_dnn_34_v11::Net m_dnn_net;
+
+	ofxCv::TrackerFollower<gui2oneFaceDetectorInstance, MyFollower> tracker_follower;
+	
 
 		
 };

@@ -104,6 +104,12 @@ void GuiApp::draw()
 
 }
 
+void GuiApp::exit()
+{
+	//ofExit();
+	
+}
+
 
 bool GuiApp::saveToTextFile(std::string path)
 {

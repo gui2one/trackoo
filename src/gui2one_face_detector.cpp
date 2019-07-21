@@ -39,8 +39,6 @@ void Gui2oneFaceDetector::initDlibShapePredictor(std::string landmarks_model)
 
 void Gui2oneFaceDetector::initEsitmateTransforms()
 {
-	object_points = cv::Mat(68, 3, CV_32F);
-	image_points = cv::Mat(68, 2, CV_32F);
 
 	// set rest landmarks 2D positions
 	// 12 points
@@ -75,8 +73,6 @@ void Gui2oneFaceDetector::initEsitmateTransforms()
 std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFaces(cv::Mat& frame)
 {
 
-
-	//printf("frame width : %d\n", frame.size().width);
 			
 	cv::Mat grey;
 	
@@ -168,18 +164,9 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 		const dlib::full_object_detection& d0 = dets[det_id];
 		image_points2.clear();
 
-		for (unsigned long i = 0; i < d0.num_parts(); i++) {
 
-			const dlib::point& pt = d0.part(i);
-
-			object_points.at<float>((int)i, 0) = (float)pt.x();
-			object_points.at<float>((int)i, 1) = (float)pt.y();
-			object_points.at<float>((int)i, 2) = (float)pt.z();
-
-		}
-
-		image_points2.push_back(cv::Vec2d(d0.part(0).x(), d0.part(0).y()));
-		image_points2.push_back(cv::Vec2d(d0.part(4).x(), d0.part(4).y()));
+		image_points2.push_back(cv::Vec2d(d0.part( 0).x(), d0.part( 0).y()));
+		image_points2.push_back(cv::Vec2d(d0.part( 4).x(), d0.part( 4).y()));
 		image_points2.push_back(cv::Vec2d(d0.part(12).x(), d0.part(12).y()));
 		image_points2.push_back(cv::Vec2d(d0.part(16).x(), d0.part(16).y()));
 		image_points2.push_back(cv::Vec2d(d0.part(17).x(), d0.part(17).y()));
@@ -220,13 +207,7 @@ std::vector<TransformVectors> Gui2oneFaceDetector::estimateTransforms(const std:
 		cam_mat.at<double>(2, 2) = 1.0;
 
 		cv::Mat1d projectionMat = cv::Mat::zeros(3, 3, CV_32F);
-		
-		projectionMat(0, 0) = focalLength;
-		projectionMat(1, 1) = focalLength;
-		projectionMat(0, 2) = opticalCenterX;
-		projectionMat(1, 2) = opticalCenterY;
-		projectionMat(2, 2) = 1.0;
-		//cv::Mat dist_coeffs(0, 0, CV_64F); // = { 0.0 }; // can leave empty if no camera distortion ...otherwise do a calibration ?
+
 
 		cv::Mat rvec = cv::Mat::zeros(3, 1, CV_64F); // = { 0.0, 0.0, 0.0 };
 		cv::Mat tvec = cv::Mat::zeros(3, 1, CV_64F);

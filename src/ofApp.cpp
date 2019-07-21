@@ -40,7 +40,6 @@ static std::vector<cv::Rect> dlib_rects_to_cv(std::vector<dlib::rectangle> _rect
 void ofApp::setup(){
 
 
-
 	w_width = 640;
 	w_height = 360;
 
@@ -58,7 +57,7 @@ void ofApp::setup(){
 	of_image.allocate(w_width, w_height, OF_IMAGE_COLOR);
 	
 
-	//test_mesh = importer.loadFile("data/pig_head.obj");
+	
 	test_mesh = importer.loadFile("data/face_mask_1.fbx");
 	test_mesh.enableNormals();
 	test_mesh.enableTextures();
@@ -97,6 +96,8 @@ void ofApp::setup(){
 	//im_gui.setup();
 
 	//ImGui::GetIO().MouseDrawCursor = false;
+
+	
 	
 }
 
@@ -251,6 +252,7 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	if (key == 'f') {
+		settings.decorated = false;
 		ofToggleFullscreen();
 	}
 }
@@ -300,6 +302,21 @@ void ofApp::windowResized(int w, int h){
 void ofApp::gotMessage(ofMessage msg){
 
 }
+
+void ofApp::exit()
+{
+	
+	//return false;
+	ofExit();
+
+}
+
+bool ofApp::my_exit() {
+	return false;
+}
+
+
+
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 

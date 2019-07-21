@@ -12,6 +12,10 @@
 int main(int argc, char* argv[]) {
 	//ofSetupOpenGL(640,360,OF_WINDOW);			// <-------- setup the GL context
 
+
+	// prevent quit on press escape key
+	ofSetEscapeQuitsApp(false);
+
 	std::string video_file_path = "";
 	if (argc < 2) {
 
@@ -35,17 +39,22 @@ int main(int argc, char* argv[]) {
 	settings.setSize(640, 360);
 	settings.setPosition(ofVec2f(500,100));
 	settings.resizable = true;
+	settings.decorated = false;
 	shared_ptr<ofAppBaseWindow> main_window = ofCreateWindow(settings);
-
+	
 	settings.setSize(400, 400);
 	settings.setPosition(ofVec2f(0, 100));
 	settings.resizable = true;
+	//settings.decorated = false;
 	shared_ptr<ofAppBaseWindow> gui_window = ofCreateWindow(settings);
 
 	shared_ptr<ofApp> mainApp(new ofApp);
 	shared_ptr<GuiApp> guiApp(new GuiApp);
 
+
 	mainApp->im_gui = guiApp;
+	
+	mainApp->settings = settings;
 	mainApp->video_file_path = video_file_path;
 	mainApp->gl = dynamic_pointer_cast<ofBaseGLRenderer>(main_window->renderer());
 	
