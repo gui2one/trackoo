@@ -22,6 +22,7 @@ static void windowCloseCallBkack(GLFWwindow * _window) {
 int main(int argc, char* argv[]) {
 	//ofSetupOpenGL(640,360,OF_WINDOW);			// <-------- setup the GL context
 
+	ofSetLogLevel(OF_LOG_VERBOSE);
 
 	// prevent quit on press escape key
 	ofSetEscapeQuitsApp(false);

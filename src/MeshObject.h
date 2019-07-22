@@ -12,9 +12,11 @@ public:
 	virtual void customDraw() {
 		//ofSphere(0, 0, 0, 100.0);
 		if (m_mesh_ptr != nullptr) {
-			//ofDisableArbTex();
 			
+			
+			ofEnableLighting();
 			renderer->draw(*m_mesh_ptr, OF_MESH_FILL);
+			ofDisableLighting();
 			//m_mesh_ptr->draw();
 			//m_mesh_ptr->drawWireframe();
 			

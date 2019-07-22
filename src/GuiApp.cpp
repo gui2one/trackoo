@@ -49,6 +49,7 @@ void GuiApp::setup()
 	}
 
 
+	ofDisableLighting();
 
 }
 
@@ -68,10 +69,11 @@ void GuiApp::update()
 
 void GuiApp::draw()
 {
+	ofDisableLighting();
 	gui.begin();
 	{
 		//auto main_settings = ofxImGui::Settings();
-		ImGui::Begin("Main Params");
+		ImGui::Begin("Main Params", false);
 
 
 

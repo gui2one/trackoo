@@ -30,7 +30,8 @@ public:
 	void onFileDialogResponse(ofxThreadedFileDialogResponse &response);
 
 
-	shared_ptr<ofAppBaseWindow> base_window;
+	shared_ptr<ofAppGLFWWindow> base_window;
+	//shared_ptr<ofBaseGLRenderer> gl_renderer;
 
 	float z_offset = 235.0;
 	float global_scale = 1.0;

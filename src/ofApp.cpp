@@ -58,10 +58,12 @@ static std::vector<cv::Rect> dlib_rects_to_cv(std::vector<dlib::rectangle> _rect
 void ofApp::setup(){
 
 
+	
+
 	//glfwSetWindowUserPointer(glfw_window, (void *)this);
 	//glfwSetWindowCloseCallback(glfw_window, windowCloseCallBack);
 
-	createGuiWindow();
+	
 
 	
 
@@ -87,15 +89,16 @@ void ofApp::setup(){
 	test_mesh.enableNormals();
 	test_mesh.enableTextures();
 
-
+	gl->enableLighting();
+	gl->enableLight(0);
 	light_1.setPointLight();
-	//light_1.enable();
+	light_1.enable();
 	camera.setFarClip(30000.0);
 	//camera.rotateAround(180.0, glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, 0.0, 0.0));
 	camera.setVFlip(true);
-
+	
 	ofLoadImage(texture, "face_texture_1.png");
-
+	
 	texture.setTextureWrap(GL_REPEAT, GL_REPEAT);
 	//texture.setTextureMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 	
@@ -122,7 +125,7 @@ void ofApp::setup(){
 
 	//ImGui::GetIO().MouseDrawCursor = false;
 
-	
+	createGuiWindow();
 	
 }
 
@@ -174,6 +177,10 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+
+
+	ofDisableLighting();
+
 	gl->draw(video_player, 0, 0, w_width, w_height);
 	
 
@@ -216,25 +223,33 @@ void ofApp::draw(){
 	
 
 	ofEnableDepthTest();
-	//light_1.enable();
+	//ofDisableArbTex();
+	light_1.enable();
 	
 	
-	gl->bind(texture, 0);
+	
 	camera.begin();
 	for (size_t i = 0; i < test_objects.size(); i++)
 	{
 		//ofPushMatrix();
 		gl->setColor(255, 255, 255);
+		//gl->enableTextureTarget(texture, 0);
+		ofDisableArbTex();
+		gl->bind(texture, 0);
 		gl->draw(test_objects[i]);
+		//gl->disableTextureTarget(0, 0);
+		gl->unbind(texture, 0);
 		//ofPopMatrix();
 	}
 
 	camera.end();
 	
-	gl->unbind(texture,0);
+	
 	//light_1.disable();
-	ofDisableDepthTest();
 
+	ofDisableDepthTest();
+	//ofDisableLighting();
+	
 	gl->setFillMode(OF_OUTLINE);
 
 	
@@ -299,8 +314,12 @@ void ofApp::keyPressed(int key)
 		//// need to confirm exit by pressing Enter Key
 	}
 	else if (key == 'i') {
+		if (gui_closed) {
 
-		createGuiWindow();
+			createGuiWindow();
+			gui_closed = false;
+
+		}
 	}
 }
 
@@ -368,21 +387,27 @@ bool ofApp::createGuiWindow()
 	ofGLFWWindowSettings settings;
 
 	settings.setSize(400, 400);
-	settings.setPosition(ofVec2f(0, 100));
+	settings.setPosition(ofVec2f(-800, 100));
 	settings.resizable = true;
+	settings.windowMode = OF_WINDOW;
+	//settings.shareContextWith = nullptr;
 	//settings.decorated = false;
-	shared_ptr<ofAppBaseWindow>  gui_window = ofCreateWindow(settings);
+	
+	shared_ptr<ofAppGLFWWindow>  gui_window = static_pointer_cast<ofAppGLFWWindow>(ofCreateWindow(settings));
 
+	// maxmize window 
+	GLFWwindow * glfw_gui_window = gui_window->getGLFWWindow();
+	glfwMaximizeWindow(glfw_gui_window);
 	
 	shared_ptr<GuiApp> guiApp(new GuiApp);
 
 	im_gui = guiApp;
 	im_gui->base_window = gui_window;
-
+	//im_gui->gl_renderer = dynamic_pointer_cast<ofBaseGLRenderer>(gui_window->renderer());
 	ofAddListener(im_gui->base_window->events().exit, this, &ofApp::onGuiExit);
 
 	ofRunApp(im_gui->base_window, im_gui);
-
+	
 	
 	return true;
 }
@@ -393,6 +418,8 @@ void ofApp::onGuiExit(ofEventArgs& args )
 	
 	ofLogNotice("ofApp.cpp", "GUI EXIT !!!!!!!");
 	ofRemoveListener(im_gui->base_window->events().exit, this, &ofApp::onGuiExit);
+	gui_closed = true;
+	
 	//createGuiWindow();
 }
 

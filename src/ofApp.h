@@ -71,7 +71,8 @@ class ofApp : public ofBaseApp{
 		GLFWwindow * glfw_window;
 
 		shared_ptr<ofBaseGLRenderer> gl;
-		shared_ptr<GuiApp> im_gui;
+		shared_ptr<GuiApp> im_gui = nullptr;
+		bool gui_closed = false;
 		
 
 		Gui2oneFaceDetector face_detector;
