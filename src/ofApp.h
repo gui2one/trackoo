@@ -31,6 +31,7 @@ class ofApp : public ofBaseApp{
 
 	public:
 		void setup();
+		
 		void update();
 		void draw();
 
@@ -51,15 +52,27 @@ class ofApp : public ofBaseApp{
 		bool my_exit();
 
 
+		bool exiting = false;
+		bool confirm_exit = false;
+
+
+		bool createGuiWindow();
+
+		void onGuiExit(ofEventArgs& args);
+
+		//static void windowCloseCallBack(GLFWwindow * _window);
+
+
 
 
 		
 		
 
-		
+		GLFWwindow * glfw_window;
 
 		shared_ptr<ofBaseGLRenderer> gl;
-		ofGLFWWindowSettings settings;
+		shared_ptr<GuiApp> im_gui;
+		
 
 		Gui2oneFaceDetector face_detector;
 
@@ -91,6 +104,7 @@ class ofApp : public ofBaseApp{
 
 		ofLight light_1;
 
-		shared_ptr<GuiApp> im_gui;
+		
+
 		
 };

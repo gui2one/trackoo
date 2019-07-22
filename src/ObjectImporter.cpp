@@ -1,4 +1,5 @@
 #include "ObjectImporter.h"
+#include "ofMain.h"
 
 ofMesh ObjectImporter::loadFile(std::string file)
 {
@@ -13,14 +14,15 @@ ofMesh ObjectImporter::loadFile(std::string file)
 
 
 	if (!scene) {
-		std::cout << "issue with Assimp !\n" << std::endl;
+		ofLogError("ObjectImporter", "issue with Assimp !");
+		//std::cout << "issue with Assimp !\n" << std::endl;
 	}
 	else {
 
 		if (!scene->HasMeshes())
 		{
-
-			std::cout << "Object is empty !\n" << std::endl;
+			ofLogNotice("ObjectImporter", "Object is empty !");
+			//std::cout << "Object is empty !\n" << std::endl;
 		}
 		else {
 
@@ -40,7 +42,8 @@ ofMesh ObjectImporter::loadFile(std::string file)
 					}
 
 					if (ai_mesh->HasNormals()) {
-						printf("Mesh has Normals\n");
+						ofLogNotice("ObjectImporter", "Mesh has Normals");
+						//printf("Mesh has Normals\n");
 						for (size_t n_id = 0; n_id < ai_mesh->mNumVertices; n_id++)
 						{
 							mesh.addNormal(ofVec3f(ai_mesh->mNormals[n_id].x, ai_mesh->mNormals[n_id].y, ai_mesh->mNormals[n_id].z));
@@ -49,7 +52,8 @@ ofMesh ObjectImporter::loadFile(std::string file)
 					}
 
 					if (ai_mesh->HasTextureCoords(0)) {
-						printf("Mesh has Textures Coordinates\n");
+						ofLogNotice("ObjectImporter", "Mesh has Textures Coordinates");
+						//printf("Mesh has Textures Coordinates\n");
 						for (size_t vert_id = 0; vert_id < ai_mesh->mNumVertices; vert_id++)
 						{
 							ofVec2f coord = ofVec2f(ai_mesh->mTextureCoords[0][vert_id].x, ai_mesh->mTextureCoords[0][vert_id].y);
@@ -58,7 +62,8 @@ ofMesh ObjectImporter::loadFile(std::string file)
 						}
 					}
 					else {
-						printf("Mesh has NO Textures Coordinates\n");
+						ofLogNotice("ObjectImporter", "Mesh has NO Textures Coordinates");
+						//printf("Mesh has NO Textures Coordinates\n");
 					}
 
 					for (size_t face_id	= 0; face_id < ai_mesh->mNumFaces; face_id++)

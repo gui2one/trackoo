@@ -36,9 +36,34 @@ static std::vector<cv::Rect> dlib_rects_to_cv(std::vector<dlib::rectangle> _rect
 }
 
 
+
+
+//
+//void ofApp::windowCloseCallBack(GLFWwindow * _window) {
+//
+//	if (glfwGetWindowUserPointer(_window) != NULL) {
+//
+//		ofApp * user_ptr = static_cast<ofApp*>(glfwGetWindowUserPointer(_window));
+//		std::cout << "was not NULL " << user_ptr->proc_width <<std::endl;
+//	}
+//	else {
+//		std::cout << "was NULL " << std::endl;
+//	}
+//
+//	glfwSetWindowShouldClose(_window, false);
+//	
+//}
+
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+
+	//glfwSetWindowUserPointer(glfw_window, (void *)this);
+	//glfwSetWindowCloseCallback(glfw_window, windowCloseCallBack);
+
+	createGuiWindow();
+
+	
 
 	w_width = 640;
 	w_height = 360;
@@ -100,6 +125,8 @@ void ofApp::setup(){
 	
 	
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -250,10 +277,30 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::keyPressed(int key)
+{
+	if (key == OF_KEY_RETURN) {
+		printf(" enter pressed\n");
+	}
+	if (key == OF_KEY_RETURN && exiting == true) {
+
+		ofExit();
+	}
+	if (key != 'q') {
+		exiting = false;
+	}
 	if (key == 'f') {
-		settings.decorated = false;
+		
 		ofToggleFullscreen();
+	}
+	else if (key == 'q') {
+
+		exiting = true;
+		//// need to confirm exit by pressing Enter Key
+	}
+	else if (key == 'i') {
+
+		createGuiWindow();
 	}
 }
 
@@ -315,7 +362,39 @@ bool ofApp::my_exit() {
 	return false;
 }
 
+bool ofApp::createGuiWindow()
+{
 
+	ofGLFWWindowSettings settings;
+
+	settings.setSize(400, 400);
+	settings.setPosition(ofVec2f(0, 100));
+	settings.resizable = true;
+	//settings.decorated = false;
+	shared_ptr<ofAppBaseWindow>  gui_window = ofCreateWindow(settings);
+
+	
+	shared_ptr<GuiApp> guiApp(new GuiApp);
+
+	im_gui = guiApp;
+	im_gui->base_window = gui_window;
+
+	ofAddListener(im_gui->base_window->events().exit, this, &ofApp::onGuiExit);
+
+	ofRunApp(im_gui->base_window, im_gui);
+
+	
+	return true;
+}
+
+void ofApp::onGuiExit(ofEventArgs& args ) 
+{
+
+	
+	ofLogNotice("ofApp.cpp", "GUI EXIT !!!!!!!");
+	ofRemoveListener(im_gui->base_window->events().exit, this, &ofApp::onGuiExit);
+	//createGuiWindow();
+}
 
 
 //--------------------------------------------------------------

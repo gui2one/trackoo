@@ -5,13 +5,16 @@
 
 
 #define DLIB_USE_CUDA
-//#define OPENCV_USE_CUDA
 
 
 
-void windowCloseCallBkack(GLFWwindow * _window) {
 
-	std::cout << "closing" << std::endl;
+static void windowCloseCallBkack(GLFWwindow * _window) {
+
+	//ofApp * user_ptr = static_cast<ofApp*>(glfwGetWindowUserPointer(_window));
+	//std::cout << "closing " << user_ptr->proc_width <<std::endl;
+
+	std::cout << "Confirm Closing " << std::endl;
 	glfwSetWindowShouldClose(_window, false);
 
 }
@@ -45,32 +48,35 @@ int main(int argc, char* argv[]) {
 
 	settings.setSize(640, 360);
 	settings.setPosition(ofVec2f(500,100));
-	settings.resizable = true;
+	settings.resizable = false;
 	settings.decorated = true;
 	shared_ptr<ofAppGLFWWindow> main_window = static_pointer_cast<ofAppGLFWWindow>(ofCreateWindow(settings));
-	
-	settings.setSize(400, 400);
-	settings.setPosition(ofVec2f(0, 100));
-	settings.resizable = true;
+	GLFWwindow * glfw_main = main_window->getGLFWWindow();
+
+	//settings.setSize(400, 400);
+	//settings.setPosition(ofVec2f(0, 100));
+	//settings.resizable = true;
 	//settings.decorated = false;
-	shared_ptr<ofAppBaseWindow> gui_window = ofCreateWindow(settings);
+	//shared_ptr<ofAppBaseWindow> gui_window = ofCreateWindow(settings);
 
 	shared_ptr<ofApp> mainApp(new ofApp);
-	shared_ptr<GuiApp> guiApp(new GuiApp);
+	//shared_ptr<GuiApp> guiApp(new GuiApp);
 
 
-	mainApp->im_gui = guiApp;
+	//mainApp->im_gui = guiApp;
 	
-	mainApp->settings = settings;
+	
+	mainApp->glfw_window = glfw_main;
 	mainApp->video_file_path = video_file_path;
 	mainApp->gl = dynamic_pointer_cast<ofBaseGLRenderer>(main_window->renderer());
 	
-	ofRunApp(gui_window, guiApp);
+	//ofRunApp(gui_window, guiApp);
 	ofRunApp(main_window, mainApp);
 
+	
+	
 
-	GLFWwindow * glfw_main = main_window->getGLFWWindow();
-
+	
 	glfwSetWindowCloseCallback(glfw_main, windowCloseCallBkack);
 
 
