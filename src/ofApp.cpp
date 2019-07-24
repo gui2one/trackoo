@@ -36,6 +36,20 @@ static std::vector<cv::Rect> dlib_rects_to_cv(std::vector<dlib::rectangle> _rect
 }
 
 
+static std::vector<gui2oneFaceDetectorInstance> dlib_rects_to_instance(std::vector<dlib::rectangle> _rects) {
+	
+	std::vector<gui2oneFaceDetectorInstance> result;
+	for (auto rect : _rects) {
+		gui2oneFaceDetectorInstance instance;
+		instance.x = rect.left();
+		instance.y = rect.top();
+		instance.width = rect.width();
+		instance.height = rect.height();
+		result.push_back(instance);
+	}
+	return result;
+}
+
 
 
 //
@@ -150,6 +164,8 @@ void ofApp::update(){
 		rectangles.clear();
 		rectangles = face_detector.detectFaces(small);
 		rect_tracker.track(dlib_rects_to_cv(rectangles));
+
+		tracker_follower.track(dlib_rects_to_instance(rectangles));
 		
 		std::vector<dlib::rectangle> current_rects;
 		for (auto label : rect_tracker.getCurrentLabels()) {

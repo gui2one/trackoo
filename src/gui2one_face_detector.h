@@ -70,7 +70,7 @@ public:
 	
 	cv::dnn::experimental_dnn_34_v11::Net m_dnn_net;
 
-	ofxCv::TrackerFollower<gui2oneFaceDetectorInstance, MyFollower> tracker_follower;
+	
 	
 
 		

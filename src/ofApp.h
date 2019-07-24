@@ -89,6 +89,8 @@ class ofApp : public ofBaseApp{
 
 		//ofxCv::Tracker<cv::Rect> rect_tracker;
 		ofxCv::TrackerFollower< cv::Rect, my_type> rect_tracker;
+		ofxCv::TrackerFollower<gui2oneFaceDetectorInstance, MyFollower> tracker_follower;
+
 		std::vector<dlib::rectangle> rectangles;
 		std::vector<dlib::rectangle> current_rectangles;
 
