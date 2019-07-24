@@ -89,7 +89,12 @@ class ofApp : public ofBaseApp{
 
 		//ofxCv::Tracker<cv::Rect> rect_tracker;
 		ofxCv::TrackerFollower< cv::Rect, my_type> rect_tracker;
-		ofxCv::TrackerFollower<gui2oneFaceDetectorInstance, MyFollower> tracker_follower;
+		ofxCv::TrackerFollower<gui2oneFaceDetectorInstance, MyFollower> instance_tracker;
+		std::vector<gui2oneFaceDetectorInstance> instances;
+
+
+		std::vector< std::vector<ofPolyline> > all_polylines;
+		std::vector<ofMesh> all_poly_masks;
 
 		std::vector<dlib::rectangle> rectangles;
 		std::vector<dlib::rectangle> current_rectangles;
@@ -101,6 +106,7 @@ class ofApp : public ofBaseApp{
 		ofTexture texture;
 		std::vector<ofMesh> test_meshes;
 		std::vector<MeshObject> test_objects;
+		
 
 		ofCamera camera;
 		std::string video_file_path;

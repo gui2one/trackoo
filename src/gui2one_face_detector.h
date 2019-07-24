@@ -33,7 +33,7 @@ public:
 
 };
 
-class MyFollower : public ofxCv::RectFollower
+class MyFollower : public ofxCv::RectFollower, gui2oneFaceDetectorInstance
 {
 	public:
 		// code here
@@ -42,7 +42,7 @@ class MyFollower : public ofxCv::RectFollower
 class Gui2oneFaceDetector
 {
 public:
-	Gui2oneFaceDetector(int w = 640, int h = 480);
+	Gui2oneFaceDetector(int w = 640, int h = 360);
 	
 	~Gui2oneFaceDetector();
 
@@ -52,12 +52,19 @@ public:
 
 	void initEsitmateTransforms();
 	std::vector<dlib::rectangle> detectFaces(cv::Mat& frame);
-	std::vector<dlib::full_object_detection> detectLandmarks(std::vector<dlib::rectangle>& _rectangles, cv::Mat _frame);
 
+	std::vector<dlib::full_object_detection> detectLandmarks(std::vector<dlib::rectangle>& _rectangles, cv::Mat _frame);
+	dlib::full_object_detection              detectLandmarks(dlib::rectangle& _rectangle, cv::Mat _frame);
+
+	std::vector<ofPolyline> getPolylines(dlib::full_object_detection & detection);
+
+	ofMesh getMesh(dlib::full_object_detection & detection);
 
 	void cvRenderFacesLandmarks(cv::Mat _frame, std::vector<dlib::full_object_detection>& shapes);
 	
+	
 	std::vector<TransformVectors> estimateTransforms(const std::vector<dlib::full_object_detection>& detections, std::vector<dlib::rectangle> rectangles, cv::Mat& _frame,float desired_aov, bool draw_infos = true);
+	TransformVectors              estimateTransforms(const dlib::full_object_detection& detection, dlib::rectangle rectangle, cv::Mat& _frame,float desired_aov, bool draw_infos = true);
 
 	int proc_width, proc_height;
 

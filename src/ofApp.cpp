@@ -45,6 +45,7 @@ static std::vector<gui2oneFaceDetectorInstance> dlib_rects_to_instance(std::vect
 		instance.y = rect.top();
 		instance.width = rect.width();
 		instance.height = rect.height();
+
 		result.push_back(instance);
 	}
 	return result;
@@ -52,40 +53,17 @@ static std::vector<gui2oneFaceDetectorInstance> dlib_rects_to_instance(std::vect
 
 
 
-//
-//void ofApp::windowCloseCallBack(GLFWwindow * _window) {
-//
-//	if (glfwGetWindowUserPointer(_window) != NULL) {
-//
-//		ofApp * user_ptr = static_cast<ofApp*>(glfwGetWindowUserPointer(_window));
-//		std::cout << "was not NULL " << user_ptr->proc_width <<std::endl;
-//	}
-//	else {
-//		std::cout << "was NULL " << std::endl;
-//	}
-//
-//	glfwSetWindowShouldClose(_window, false);
-//	
-//}
+
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
-
-	
-
-	//glfwSetWindowUserPointer(glfw_window, (void *)this);
-	//glfwSetWindowCloseCallback(glfw_window, windowCloseCallBack);
-
-	
-
 	
 
 	w_width = 640;
 	w_height = 360;
 
 	proc_width = 520;
-	proc_height = (int)((float)proc_width / (16.0/9.0));
+	proc_height = (int)((float)proc_width / ((float)w_width /(float)w_height));
 
 	face_detector.setProcessSize(proc_width, proc_height);
 
@@ -148,12 +126,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	
-
-	
-	//video_player.update();
-
 	video_player.update();
+
 	if (video_player.isFrameNew())
 	{
 
@@ -165,23 +139,41 @@ void ofApp::update(){
 		rectangles = face_detector.detectFaces(small);
 		rect_tracker.track(dlib_rects_to_cv(rectangles));
 
-		tracker_follower.track(dlib_rects_to_instance(rectangles));
+		instance_tracker.track(dlib_rects_to_instance(rectangles));
 		
-		std::vector<dlib::rectangle> current_rects;
-		for (auto label : rect_tracker.getCurrentLabels()) {
+		//std::vector<dlib::rectangle> current_rects;
+	
+		instances.clear();
 
-			auto cv_rect = rect_tracker.getCurrent(label);
-			auto dlib_rect = dlib::rectangle(cv_rect.x, cv_rect.y, cv_rect.x + cv_rect.width, cv_rect.y + cv_rect.height);
+		all_polylines.clear();
+		all_poly_masks.clear();
+		for (auto label : instance_tracker.getCurrentLabels()) {
 
-			current_rects.push_back(dlib_rect);
+			auto instance = instance_tracker.getCurrent(label);
+			
+			auto dlib_rect = dlib::rectangle(instance.x, instance.y, instance.x + instance.width, instance.y + instance.height);
+
+			dlib::full_object_detection detection = face_detector.detectLandmarks(dlib_rect, small);
+
+			std::vector<ofPolyline> polylines = face_detector.getPolylines(detection);
+			all_polylines.push_back(polylines);
+
+			ofMesh mask_mesh = face_detector.getMesh(detection);
+			all_poly_masks.push_back(mask_mesh);
+
+			TransformVectors vectors = face_detector.estimateTransforms(detection, dlib_rect, small, im_gui->aov, false);
+			instance.vectors = vectors;
+			instances.push_back(instance);
+			//current_rects.push_back(dlib_rect);
 		}
-		std::vector<dlib::full_object_detection> dets = face_detector.detectLandmarks(current_rects, small);
-		tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, im_gui->aov, false);
 
-		face_detector.cvRenderFacesLandmarks(small, dets);
-		
-		//ofxCv::toOf(small, of_image);
-		//of_image.update();
+		//ofLogNotice("proc size : " + ofToString(proc_width) + ", " + ofToString(proc_height));
+
+
+		//std::vector<dlib::full_object_detection> dets = face_detector.detectLandmarks(current_rects, small);
+		//tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, im_gui->aov, false);
+
+		//face_detector.cvRenderFacesLandmarks(small, dets);
 
 		
 	}
@@ -198,15 +190,41 @@ void ofApp::draw(){
 	ofDisableLighting();
 
 	gl->draw(video_player, 0, 0, w_width, w_height);
-	
-
 
 	test_objects.clear();
 	
-	for(size_t i=0; i < tr_vectors.size(); i++)
+	tr_vectors.clear();
+
+	//for (auto instance : instances) {
+	//	ofLogNotice(ofToString(instance.vectors.translates));
+	//}
+
+
+	for (auto polylines : all_polylines) {
+		for (auto polyline : polylines) {
+
+			gl->pushMatrix();
+			float scale_factor = (float)w_width / (float)proc_width;
+
+			float w_ratio = (float)w_width / (float)w_height;
+			float proc_ratio = (float)proc_width / (float)proc_height;
+			gl->scale(scale_factor, scale_factor * 1.0/( w_ratio / proc_ratio), scale_factor);
+			gl->setLineWidth(2);
+			gl->draw(polyline);
+
+			gl->popMatrix();
+		}
+	}
+
+	for (auto mask : all_poly_masks) {
+		gl->draw(mask, OF_MESH_FILL);
+		
+	}
+
+	for(size_t i=0; i < instances.size(); i++)
 	{
 		
-		TransformVectors tr = tr_vectors[i];
+		TransformVectors tr = instances[i].vectors;
 
 		ofQuaternion quat( 
 			ofRadToDeg(tr.rotates.x), ofVec3f(1.0, 0.0, 0.0),
@@ -229,11 +247,11 @@ void ofApp::draw(){
 
 	}
 	
-	if (tr_vectors.size() > 0) {
+	if (instances.size() > 0) {
 
-		im_gui->plot_values_rx.insert(im_gui->plot_values_rx.begin(), tr_vectors[0].rotates.x / PI  * 180.0);
-		im_gui->plot_values_ry.insert(im_gui->plot_values_ry.begin(), tr_vectors[0].rotates.y / PI  * 180.0);
-		im_gui->plot_values_rz.insert(im_gui->plot_values_rz.begin(), tr_vectors[0].rotates.z / PI  * 180.0);
+		im_gui->plot_values_rx.insert(im_gui->plot_values_rx.begin(), instances[0].vectors.rotates.x / PI  * 180.0);
+		im_gui->plot_values_ry.insert(im_gui->plot_values_ry.begin(), instances[0].vectors.rotates.y / PI  * 180.0);
+		im_gui->plot_values_rz.insert(im_gui->plot_values_rz.begin(), instances[0].vectors.rotates.z / PI  * 180.0);
 		
 	}
 	
@@ -281,6 +299,19 @@ void ofApp::draw(){
 		gl->drawString("face id : " + ofToString(label), cv_rect.x * width_ratio, cv_rect.y * height_ratio, 0.0);
 
 	}
+
+	//std::vector<MyFollower> instance_followers = instance_tracker.getFollowers();
+	//for (auto fol : instance_followers) {
+	//	int _label = fol.getLabel();
+	//	if (instance_tracker.existsCurrent(_label)) {
+	//		auto instance = instance_tracker.getCurrent(_label);
+	//		ofLogNotice("translates : " + ofToString(instance.vectors.translates));
+	//	}
+	//	
+	//}
+
+
+	//ofLogNotice("num followers : " + ofToString(instance_followers.size()));
 
 	std::vector<my_type> followers = rect_tracker.getFollowers();
 
@@ -378,6 +409,10 @@ void ofApp::mouseExited(int x, int y){
 void ofApp::windowResized(int w, int h){
 	w_width = w;
 	w_height = h;
+	proc_width = 520;
+	proc_height = (int)((float)proc_width / (16.0/9.0));
+
+	face_detector.setProcessSize(proc_width, proc_height);
 }
 
 //--------------------------------------------------------------

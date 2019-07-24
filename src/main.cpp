@@ -47,6 +47,10 @@ int main(int argc, char* argv[]) {
 
 	ofGLFWWindowSettings settings;
 
+
+	int width, height;
+	width = 520;
+	height = (int)((float)width / (16.0 / 9.0));
 	settings.setSize(640, 360);
 	settings.setPosition(ofVec2f(500,100));
 	settings.resizable = false;
