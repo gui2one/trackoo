@@ -62,7 +62,7 @@ void ofApp::setup(){
 	w_width = 640;
 	w_height = 360;
 
-	proc_width = 520;
+	proc_width = 640;
 	proc_height = (int)((float)proc_width / ((float)w_width /(float)w_height));
 
 	face_detector.setProcessSize(proc_width, proc_height);
@@ -89,10 +89,12 @@ void ofApp::setup(){
 	//camera.rotateAround(180.0, glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, 0.0, 0.0));
 	camera.setVFlip(true);
 	
-	ofLoadImage(texture, "face_texture_1.png");
+	ofLoadImage(texture_logo, "logo_SRFC_01.png");
+	ofLoadImage(texture_2_couleurs, "couleurs_SRFC_01.png");
 	
-	texture.setTextureWrap(GL_REPEAT, GL_REPEAT);
-	//texture.setTextureMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+	texture_logo.setTextureWrap(GL_REPEAT, GL_REPEAT);
+	texture_logo.setTextureMinMagFilter(GL_LINEAR, GL_LINEAR);
+	texture_logo.setTextureMinMagFilter(GL_NEAREST, GL_LINEAR);
 	
 	
 	std::vector<glm::vec2> scaled_coords;
@@ -155,25 +157,27 @@ void ofApp::update(){
 
 			dlib::full_object_detection detection = face_detector.detectLandmarks(dlib_rect, small);
 
-			std::vector<ofPolyline> polylines = face_detector.getPolylines(detection);
-			all_polylines.push_back(polylines);
 
-			ofMesh mask_mesh = face_detector.getMesh(detection);
-			all_poly_masks.push_back(mask_mesh);
+			if (im_gui->b_show_polylines) {
 
-			TransformVectors vectors = face_detector.estimateTransforms(detection, dlib_rect, small, im_gui->aov, false);
-			instance.vectors = vectors;
-			instances.push_back(instance);
-			//current_rects.push_back(dlib_rect);
+				std::vector<ofPolyline> polylines = face_detector.getPolylines(detection);
+				all_polylines.push_back(polylines);
+			}
+
+			if (im_gui->b_show_polymasks) {
+
+				ofMesh mask_mesh = face_detector.getMesh(detection);
+				all_poly_masks.push_back(mask_mesh);
+			}
+			if (im_gui->b_show_3d_heads) {
+				TransformVectors vectors = face_detector.estimateTransforms(detection, dlib_rect, small, im_gui->aov, false);
+				instance.vectors = vectors;
+				instances.push_back(instance);
+			}
+			
 		}
 
-		//ofLogNotice("proc size : " + ofToString(proc_width) + ", " + ofToString(proc_height));
 
-
-		//std::vector<dlib::full_object_detection> dets = face_detector.detectLandmarks(current_rects, small);
-		//tr_vectors = face_detector.estimateTransforms(dets, rectangles, small, im_gui->aov, false);
-
-		//face_detector.cvRenderFacesLandmarks(small, dets);
 
 		
 	}
@@ -185,7 +189,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
 	ofDisableLighting();
 
@@ -216,10 +220,23 @@ void ofApp::draw(){
 		}
 	}
 
+	texture_2_couleurs.bind();
+	gl->pushMatrix();
+	float scale_factor = (float)w_width / (float)proc_width;
+
+	float w_ratio = (float)w_width / (float)w_height;
+	float proc_ratio = (float)proc_width / (float)proc_height;
+	gl->scale(scale_factor, scale_factor * 1.0 / (w_ratio / proc_ratio), scale_factor);
+
+	ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
 	for (auto mask : all_poly_masks) {
-		gl->draw(mask, OF_MESH_FILL);
 		
+		gl->draw(mask, OF_MESH_FILL);
 	}
+
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	texture_2_couleurs.unbind();
+	gl->popMatrix();
 
 	for(size_t i=0; i < instances.size(); i++)
 	{
@@ -269,73 +286,67 @@ void ofApp::draw(){
 		gl->setColor(255, 255, 255);
 		//gl->enableTextureTarget(texture, 0);
 		ofDisableArbTex();
-		gl->bind(texture, 0);
+		gl->bind(texture_logo, 0);
 		gl->draw(test_objects[i]);
 		//gl->disableTextureTarget(0, 0);
-		gl->unbind(texture, 0);
+		gl->unbind(texture_logo, 0);
 		//ofPopMatrix();
 	}
 
 	camera.end();
 	
-	
 	//light_1.disable();
 
 	ofDisableDepthTest();
 	//ofDisableLighting();
-	
-	gl->setFillMode(OF_OUTLINE);
+	if (im_gui->b_show_rectangles){
 
-	
-	float width_ratio = (float)w_width / (float)proc_width;
-	float height_ratio = (float)w_height / (float)proc_height;
-	for (auto label : rect_tracker.getCurrentLabels()) {
 
-		auto cv_rect = rect_tracker.getCurrent(label);
-		gl->setColor(255, 30, 30);
-		gl->drawRectangle(cv_rect.x * width_ratio, cv_rect.y * height_ratio, 0.0, cv_rect.width * width_ratio,	 cv_rect.height * height_ratio);
-		
+		gl->setFillMode(OF_OUTLINE);
+
+
+		float width_ratio = (float)w_width / (float)proc_width;
+		float height_ratio = (float)w_height / (float)proc_height;
+		for (auto label : rect_tracker.getCurrentLabels()) {
+
+			auto cv_rect = rect_tracker.getCurrent(label);
+			gl->setColor(255, 30, 30);
+			gl->drawRectangle(cv_rect.x * width_ratio, cv_rect.y * height_ratio, 0.0, cv_rect.width * width_ratio, cv_rect.height * height_ratio);
+
+			gl->setColor(255, 255, 255);
+			gl->drawString("face id : " + ofToString(label), cv_rect.x * width_ratio, cv_rect.y * height_ratio, 0.0);
+
+		}
+
+
+		std::vector<my_type> followers = rect_tracker.getFollowers();
+
+		for (size_t i = 0; i < followers.size(); i++) {
+
+			int _label = followers[i].getLabel();
+			if (rect_tracker.existsCurrent(_label)) {
+
+				cv::Rect _rect = rect_tracker.getCurrent(_label);
+				gl->setColor(0, 255, 0);
+				gl->drawRectangle(_rect.x, _rect.y, 0, _rect.width, _rect.height);
+			}
+			else {
+				//gl->setColor(255, 0, 0);
+			}
+			followers[i].my_setup();
+
+
+		}
+
 		gl->setColor(255, 255, 255);
-		gl->drawString("face id : " + ofToString(label), cv_rect.x * width_ratio, cv_rect.y * height_ratio, 0.0);
-
+		gl->setFillMode(OF_FILLED);
 	}
-
-	//std::vector<MyFollower> instance_followers = instance_tracker.getFollowers();
-	//for (auto fol : instance_followers) {
-	//	int _label = fol.getLabel();
-	//	if (instance_tracker.existsCurrent(_label)) {
-	//		auto instance = instance_tracker.getCurrent(_label);
-	//		ofLogNotice("translates : " + ofToString(instance.vectors.translates));
-	//	}
-	//	
-	//}
+		
+	
 
 
-	//ofLogNotice("num followers : " + ofToString(instance_followers.size()));
 
-	std::vector<my_type> followers = rect_tracker.getFollowers();
-
-	for (size_t i = 0; i < followers.size(); i++) {
-
-		int _label = followers[i].getLabel();
-		if (rect_tracker.existsCurrent(_label)) {
-
-			cv::Rect _rect = rect_tracker.getCurrent(_label);
-			gl->setColor(0, 255, 0);
-			gl->drawRectangle(_rect.x, _rect.y, 0, _rect.width, _rect.height);
-		}
-		else {
-			//gl->setColor(255, 0, 0);
-		}
-		followers[i].my_setup();
-
-
-	}
-
-	gl->setColor(255, 255, 255);
-	gl->setFillMode(OF_FILLED);
-
-	gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
+	//gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
 }
 
 //--------------------------------------------------------------

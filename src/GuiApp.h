@@ -37,6 +37,13 @@ public:
 	float global_scale = 1.0;
 	float aov = 60.0;
 
+	bool b_show_rectangles = false;
+
+	bool b_show_polylines = false;
+	bool b_show_3d_heads = false;
+	bool b_show_polymasks = true;
+
+
 	std::vector<float> plot_values_tx;
 	std::vector<float> plot_values_ty;
 	std::vector<float> plot_values_tz;

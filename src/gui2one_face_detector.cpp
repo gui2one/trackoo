@@ -226,39 +226,111 @@ ofMesh Gui2oneFaceDetector::getMesh(dlib::full_object_detection& detection) {
 	
 	const dlib::full_object_detection d = detection;
 	std::vector<glm::vec3> verts;
-	verts.reserve(d.num_parts());
-	for (size_t part_id = 0; part_id < d.num_parts(); part_id++) {
+	//verts.reserve(d.num_parts());
+	for (size_t part_id = 0; part_id < 60; part_id++) {
 
-		verts.emplace_back(glm::vec3(d.part(part_id).x(), d.part(part_id).y(), 0.0));
+		verts.push_back(glm::vec3(d.part(part_id).x(), d.part(part_id).y(), 0.0));
+
 
 	}
+	
+
+
+	// adding forhead vertices
+	glm::vec3 pos1, pos2, center;
+	pos1 = glm::vec3(d.part(0).x(), d.part(0).y(), 0.0);
+	pos2 = glm::vec3(d.part(16).x(), d.part(16).y(), 0.0);
+	center = (pos1 + pos2) * 0.5;
+
+	//ofLogNotice("num verts : " + ofToString(verts.size()));
+
+	float radius = glm::distance(pos1, pos2) / 2.0;
+	size_t num_pts = 10;
+	for (size_t i = 1; i < num_pts-1; i++)
+	{
+		float angle = PI / ((float)num_pts - 1) * i;
+		glm::vec3 new_pos = glm::vec3(
+			cos(angle) * radius + center.x, 
+			
+			sin(-angle) * radius + center.y,
+
+			0.0
+		);
+		verts.push_back(new_pos);
+	}
+
+	//ofLogNotice("num verts : " + ofToString(verts.size()));
+
+
 	mesh.addVertices(verts);
 
 	std::vector<unsigned int> indices = { 
-		0,17,36,36,17,18,37,18,19,38,19,
-		20,39,20,21,39,21,27,27,28,39,
-		29,39,28,39,29,30,30,1,40,1,
-		0,36,1,41,40,2,1,30,2,31,
-		49,50,32,33,3,49,48,4,48,59,
-		5,59,58,6,58,57,8,7,57,49,
-		31,50,50,31,32,27,22,42,22,23,
-		42,24,43,42,25,44,43,26,45,44,
-		26,16,45,46,45,16,15,47,46,27,
-		42,28,42,29,28,30,29,42,30,42,
-		47,30,15,14,34,52,51,35,52,34,
-		52,35,53,35,14,13,53,13,12,54,
-		12,11,55,11,10,56,10,9,57,9,
-		8,9,57,56,10,56,55,11,55,54,
-		12,54,53,13,53,35,51,33,34,14,
-		35,30,47,15,30,16,15,46,44,25,
-		26,43,24,25,42,23,24,57,7,6,
-		58,6,5,59,5,4,48,4,3,33,
-		51,50,49,3,2,30,31,2,36,41,
-		1,40,39,30,20,39,38,19,38,37,
-		18,37,36
+		0,17,36,36,17,18,37,18,19,38,
+		19,20,39,20,21,39,21,27,27,28,
+		39,29,39,28,39,29,30,30,1,40,
+		1,0,36,1,41,40,2,1,30,2,
+		31,49,50,32,33,3,49,48,4,48,
+		59,5,59,58,6,58,57,8,7,57,
+		49,31,50,50,31,32,27,22,42,22,
+		23,42,24,43,42,25,44,43,26,45,
+		44,26,16,45,46,45,16,15,47,46,
+		27,42,28,42,29,28,30,29,42,30,
+		42,47,30,15,14,34,52,51,35,52,
+		34,52,35,53,35,14,13,53,13,12,
+		54,12,11,55,11,10,56,10,9,57,
+		9,8,9,57,56,10,56,55,11,55,
+		54,12,54,53,13,53,35,51,33,34,
+		14,35,30,47,15,30,16,15,46,44,
+		25,26,43,24,25,42,23,24,57,7,
+		6,58,6,5,59,5,4,48,4,3,
+		33,51,50,49,3,2,30,31,2,36,
+		41,1,40,39,30,20,39,38,19,38,
+		37,18,37,36,0,67,17,67,66,17,
+		17,66,18,18,66,65,65,19,18,19,
+		65,64,20,19,64,64,21,20,21,64,
+		27,27,64,63,22,27,63,63,23,22,
+		23,63,24,24,63,62,62,25,24,25,
+		62,61,61,26,25,26,61,60,26,60,
+		16
 	};
+
+	// forehead indices
+	//indices.push_back(0); indices.push_back(17); indices.push_back(67);
+	//indices.push_back(17); indices.push_back(67); indices.push_back(66);
+	//indices.push_back(17); indices.push_back(18); indices.push_back(66);
+	//indices.push_back(18); indices.push_back(65); indices.push_back(66);
+	//indices.push_back(18); indices.push_back(19); indices.push_back(65);
+	//indices.push_back(19); indices.push_back(64); indices.push_back(65);
 	mesh.addIndices(indices.data(), indices.size());
 
+
+	std::vector<glm::vec2> t_coords = { 
+		glm::vec2(0.000000, 230.978714),glm::vec2(8.202797, 277.388123),glm::vec2(12.758161, 323.817841),
+		glm::vec2(28.760233, 372.349030),glm::vec2(54.848812, 411.945587),glm::vec2(95.251251, 443.935822),
+		glm::vec2(141.887695, 476.302856),glm::vec2(198.896622, 500.510345),glm::vec2(255.992035, 512.000000),
+		glm::vec2(313.103394, 500.510345),glm::vec2(370.112335, 476.302856),glm::vec2(416.748749, 443.935822),
+		glm::vec2(457.151215, 411.945587),glm::vec2(483.239838, 372.349030),glm::vec2(499.241852, 323.817841),
+		glm::vec2(503.797211, 277.388123),glm::vec2(512.000000, 230.978729),glm::vec2(67.622635, 165.738831),
+		glm::vec2(97.213753, 150.183105),glm::vec2(132.475891, 145.232437),glm::vec2(169.602234, 147.016434),
+		glm::vec2(202.717819, 154.502106),glm::vec2(309.282196, 154.502106),glm::vec2(342.397797, 147.016434),
+		glm::vec2(379.524139, 145.232437),glm::vec2(414.786224, 150.183105),glm::vec2(444.377411, 165.738831),
+		glm::vec2(255.791733, 199.971649),glm::vec2(255.997482, 225.746155),glm::vec2(255.795776, 253.484955),
+		glm::vec2(256.368652, 277.725983),glm::vec2(215.528519, 324.049011),glm::vec2(239.851624, 330.269592),
+		glm::vec2(256.127625, 332.184540),glm::vec2(278.261841, 327.282898),glm::vec2(298.727875, 318.555328),
+		glm::vec2(92.551414, 209.043015),glm::vec2(123.845032, 196.293381),glm::vec2(164.247986, 195.820969),
+		glm::vec2(196.671844, 211.563019),glm::vec2(161.510254, 218.718918),glm::vec2(122.117149, 217.811951),
+		glm::vec2(315.328156, 211.563019),glm::vec2(347.752045, 195.820969),glm::vec2(388.154999, 196.293381),
+		glm::vec2(419.448608, 209.043015),glm::vec2(389.882904, 217.811951),glm::vec2(350.489777, 218.718918),
+		glm::vec2(167.983261, 382.497040),glm::vec2(195.702652, 358.197357),glm::vec2(225.060654, 346.739777),
+		glm::vec2(256.212555, 347.522827),glm::vec2(288.481415, 346.942902),glm::vec2(316.427124, 357.853943),
+		glm::vec2(348.185669, 387.013824),glm::vec2(324.063934, 399.149017),glm::vec2(292.006226, 410.581207),
+		glm::vec2(258.338623, 416.046783),glm::vec2(222.390457, 411.362946),glm::vec2(192.927856, 398.118683),
+		glm::vec2(496.561310, 184.794586),glm::vec2(452.107391, 98.327156),glm::vec2(384.000000, 34.148655),
+		glm::vec2(300.453949, 0.000012),glm::vec2(211.546097, 0.000000),glm::vec2(127.999992, 34.148670),
+		glm::vec2(59.892628, 98.327141),glm::vec2(15.438691, 184.794556)
+
+	};
+	mesh.addTexCoords(t_coords);
 	return mesh;
 }
 void Gui2oneFaceDetector::cvRenderFacesLandmarks(cv::Mat _frame , std::vector<dlib::full_object_detection>& shapes)
@@ -437,6 +509,22 @@ TransformVectors Gui2oneFaceDetector::estimateTransforms(const dlib::full_object
 		image_points2.push_back(cv::Vec2d(d0.part(54).x(), d0.part(54).y()));
 
 
+		//image_points2.push_back(cv::Vec2d(d0.part (0).x() - rectangle.left(), d0.part( 0).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part( 4).x() - rectangle.left(), d0.part( 4).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(12).x() - rectangle.left(), d0.part(12).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(16).x() - rectangle.left(), d0.part(16).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(17).x() - rectangle.left(), d0.part(17).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(21).x() - rectangle.left(), d0.part(21).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(22).x() - rectangle.left(), d0.part(22).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(26).x() - rectangle.left(), d0.part(26).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(27).x() - rectangle.left(), d0.part(27).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(30).x() - rectangle.left(), d0.part(30).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(36).x() - rectangle.left(), d0.part(36).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(39).x() - rectangle.left(), d0.part(39).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(42).x() - rectangle.left(), d0.part(42).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(45).x() - rectangle.left(), d0.part(45).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(48).x() - rectangle.left(), d0.part(48).y() - rectangle.top()));
+		//image_points2.push_back(cv::Vec2d(d0.part(54).x() - rectangle.left(), d0.part(54).y() - rectangle.top()));
 
 
 		float aspect_ratio = (float)proc_width / (float)proc_height;
@@ -463,8 +551,8 @@ TransformVectors Gui2oneFaceDetector::estimateTransforms(const dlib::full_object
 		cv::Mat1d projectionMat = cv::Mat::zeros(3, 3, CV_32F);
 
 
-		cv::Mat rvec = cv::Mat::zeros(3, 1, CV_64F); // = { 0.0, 0.0, 0.0 };
-		cv::Mat tvec = cv::Mat::zeros(3, 1, CV_64F);
+		cv::Mat rvec = cv::Mat::zeros(3, 1, CV_32F); // = { 0.0, 0.0, 0.0 };
+		cv::Mat tvec = cv::Mat::zeros(3, 1, CV_32F);
 
 
 		cv::Mat1d dist_coeffs = cv::Mat::zeros(5, 1, CV_32F);

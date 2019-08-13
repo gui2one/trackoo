@@ -76,23 +76,37 @@ void GuiApp::draw()
 		ImGui::Begin("Main Params", false);
 
 
+		if (ImGui::CollapsingHeader("save params")) {
 
-		if (ImGui::Button("Save To File")) {
-			openSaveFileDialog();
+
+			if (ImGui::Button("Save To File")) {
+				openSaveFileDialog();
+			}
+			ImGui::Separator();
+			if (ImGui::Button("Load From File")) {
+				openLoadFileDialog();
+			}
 		}
-		if (ImGui::Button("Load From File")) {
-			openLoadFileDialog();
+
+		if (ImGui::CollapsingHeader("Controls")) {
+			ImGui::DragFloat("Z Offset", &z_offset, 0.1f, -500.0f, 500.0f);
+			ImGui::DragFloat("Global Scale", &global_scale, 0.1f, 0.2f, 10.0f);
+			ImGui::DragFloat("Angle ", &aov, 0.1f, 0.1f, 180.0f);
+
+			ImGui::Checkbox("show rectangles", &b_show_rectangles);
+			ImGui::Separator();
+			ImGui::Checkbox("show polylines", &b_show_polylines);
+			ImGui::Checkbox("show 3D heads", &b_show_3d_heads);
+			ImGui::Checkbox("show polymasks", &b_show_polymasks);
 		}
 
-		ImGui::DragFloat("Z Offset", &z_offset, 0.1f, -500.0f, 500.0f);
-		ImGui::DragFloat("Global Scale", &global_scale,0.1f, 0.2f,10.0f);
-		ImGui::DragFloat("Angle ", &aov,0.1f, 0.1f,180.0f);
-	
-		ImGui::PushItemWidth(-1);
-		ImGui::PlotLines("", plot_values_rx.data(), plot_values_rx.size(), 0, "rx", -180, 180, ImVec2(0.f,100.f));
-		ImGui::PlotLines("", plot_values_ry.data(), plot_values_rx.size(), 0, "ry", -180, 180, ImVec2(0.f,100.f));
-		ImGui::PlotLines("", plot_values_rz.data(), plot_values_rx.size(), 0, "rz", -180, 180, ImVec2(0.f,100.f));
 
+		if (ImGui::CollapsingHeader("Diagnostic")) {
+			ImGui::PushItemWidth(-1);
+			ImGui::PlotLines("", plot_values_rx.data(), plot_values_rx.size(), 0, "rx", -180, 180, ImVec2(0.f, 100.f));
+			ImGui::PlotLines("", plot_values_ry.data(), plot_values_rx.size(), 0, "ry", -180, 180, ImVec2(0.f, 100.f));
+			ImGui::PlotLines("", plot_values_rz.data(), plot_values_rx.size(), 0, "rz", -180, 180, ImVec2(0.f, 100.f));
+		}
 
 
 

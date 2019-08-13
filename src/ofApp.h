@@ -103,7 +103,7 @@ class ofApp : public ofBaseApp{
 		ObjectImporter importer;
 
 		ofMesh test_mesh;
-		ofTexture texture;
+		ofTexture texture_logo, texture_2_couleurs;
 		std::vector<ofMesh> test_meshes;
 		std::vector<MeshObject> test_objects;
 		
