@@ -75,6 +75,7 @@
     <TargetName>$(ProjectName)_debug</TargetName>
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
+    <LibraryPath>D:\CODE\CPP_libs\assimp-install\lib;D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\x64\vc15\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>bin\</OutDir>
@@ -82,24 +83,25 @@
     <TargetName>$(ProjectName)_debug</TargetName>
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
-    <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1\lib\x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <IncludePath>D:\CODE\CPP_libs\opencv-3.4.6-install\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\assimp-install\include;D:\of_v0.10.1_vs2017_release\apps\myApps\myFaceTracker\src\libs\tinyfiledialog;$(IncludePath)</IncludePath>
+    <IncludePath>D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\assimp-install\include;D:\of_v0.10.1_vs2017_release\apps\myApps\myFaceTracker\src\libs\tinyfiledialog;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin\</OutDir>
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>D:\CODE\CPP_libs\assimp-install\lib;D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\x64\vc15\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>bin\</OutDir>
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1\lib\x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <IncludePath>D:\CODE\CPP_libs\opencv-3.4.6-install\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\assimp-install\include;D:\of_v0.10.1_vs2017_release\apps\myApps\myFaceTracker\src\libs\tinyfiledialog;$(IncludePath)</IncludePath>
+    <IncludePath>D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\assimp-install\include;D:\of_v0.10.1_vs2017_release\apps\myApps\myFaceTracker\src\libs\tinyfiledialog;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,6 +126,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc141-mt.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
@@ -143,8 +146,8 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>assimp-vc141-mt.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc141-mt.lib;cudnn.lib;cuda.lib;cublas.lib;curand.lib;cusolver.lib;cudart.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_cudafeatures2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_cudaimgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_cudaobjdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
     <ProjectReference>
@@ -177,6 +180,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc141-mt.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
@@ -204,8 +208,8 @@ D:\of_v0.10.1_vs2017_release\addons\ofxImGui\libs\imgui\src</AdditionalIncludeDi
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc141-mt.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CUDA_PATH)\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc141-mt.lib;cudnn.lib;cuda.lib;cublas.lib;curand.lib;cusolver.lib;cudart.lib;dlib19.17.99_release_64bit_msvc1916.lib;opencv_calib3d346.lib;opencv_core346.lib;opencv_dnn346.lib;opencv_features2d346.lib;opencv_cudafeatures2d346.lib;opencv_flann346.lib;opencv_highgui346.lib;opencv_imgcodecs346.lib;opencv_imgproc346.lib;opencv_cudaimgproc346.lib;opencv_ml346.lib;opencv_objdetect346.lib;opencv_cudaobjdetect346.lib;opencv_photo346.lib;opencv_shape346.lib;opencv_stitching346.lib;opencv_superres346.lib;opencv_video346.lib;opencv_videoio346.lib;opencv_videostab346.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent />
     <ProjectReference>

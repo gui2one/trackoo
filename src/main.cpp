@@ -4,7 +4,7 @@
 #include "ofAppGLFWWindow.h"
 
 
-#define DLIB_USE_CUDA
+//#define DLIB_USE_CUDA
 
 
 
@@ -49,9 +49,9 @@ int main(int argc, char* argv[]) {
 
 
 	int width, height;
-	width = 520;
+	width = 1024;
 	height = (int)((float)width / (16.0 / 9.0));
-	settings.setSize(640, 360);
+	settings.setSize(1024, 576);
 	settings.setPosition(ofVec2f(500,100));
 	settings.resizable = false;
 	settings.decorated = true;

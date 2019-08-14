@@ -20,7 +20,7 @@ public:
 			//m_mesh_ptr->draw();
 			//m_mesh_ptr->drawWireframe();
 			
-			renderer->drawAxis(1.0);
+			//renderer->drawAxis(1.0);
 			
 		}
 

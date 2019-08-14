@@ -58,11 +58,11 @@ static std::vector<gui2oneFaceDetectorInstance> dlib_rects_to_instance(std::vect
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
+	
+	w_width = 1920;
+	w_height = 1080;
 
-	w_width = 640;
-	w_height = 360;
-
-	proc_width = 640;
+	proc_width = 600;
 	proc_height = (int)((float)proc_width / ((float)w_width /(float)w_height));
 
 	face_detector.setProcessSize(proc_width, proc_height);
@@ -73,7 +73,7 @@ void ofApp::setup(){
 	video_player.load(video_file_path);
 	video_player.play();
 
-	of_image.allocate(w_width, w_height, OF_IMAGE_COLOR);
+	//of_image.allocate(w_width, w_height, OF_IMAGE_COLOR);
 	
 
 	
@@ -96,6 +96,8 @@ void ofApp::setup(){
 	texture_logo.setTextureMinMagFilter(GL_LINEAR, GL_LINEAR);
 	texture_logo.setTextureMinMagFilter(GL_NEAREST, GL_LINEAR);
 	
+
+	ofLoadImage(overlay_1, "overlay_01.png");
 	
 	std::vector<glm::vec2> scaled_coords;
 	scaled_coords.reserve(test_mesh.getNumTexCoords());
@@ -134,8 +136,14 @@ void ofApp::update(){
 	{
 
 		cv::Mat frame = ofxCv::toCv(video_player);
+		
 		cv::Mat small = cv::Mat(proc_height, proc_width, CV_8UC3);
+
+		
 		ofxCv::resize(frame, small);
+		cv::cuda::GpuMat gpu_mat;
+		gpu_mat.upload(small);
+		
 		
 		rectangles.clear();
 		rectangles = face_detector.detectFaces(small);
@@ -344,6 +352,8 @@ void ofApp::draw(){
 		
 	
 
+	ofDisableLighting();
+	overlay_1.draw(0, 0, w_width, w_height);
 
 
 	//gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
@@ -420,8 +430,8 @@ void ofApp::mouseExited(int x, int y){
 void ofApp::windowResized(int w, int h){
 	w_width = w;
 	w_height = h;
-	proc_width = 520;
-	proc_height = (int)((float)proc_width / (16.0/9.0));
+	//proc_width = 1024;
+	//proc_height = (int)((float)proc_width / (16.0/9.0));
 
 	face_detector.setProcessSize(proc_width, proc_height);
 }

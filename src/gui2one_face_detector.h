@@ -1,9 +1,17 @@
 #pragma once
-
+#define DLIB_USE_CUDA
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/dnn/dnn.hpp>
+
 #include <opencv2/opencv.hpp>
+
+
+#include <opencv2/core/cuda.hpp>
+#include <opencv2/cudaarithm.hpp>
+#include <opencv2/cudaimgproc.hpp>
+
+
 
 
 
@@ -14,6 +22,10 @@
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
 
+#include <dlib/cuda/gpu_data.h>
+#include <dlib/cuda/cuda_dlib.h>
+#include <dlib/cuda/cuda_utils.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
@@ -21,6 +33,8 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+
+
 struct TransformVectors {
 	ofVec3f translates;
 	ofVec3f rotates;
@@ -42,7 +56,7 @@ class MyFollower : public ofxCv::RectFollower, gui2oneFaceDetectorInstance
 class Gui2oneFaceDetector
 {
 public:
-	Gui2oneFaceDetector(int w = 640, int h = 360);
+	Gui2oneFaceDetector(int w = 1920, int h = 1080);
 	
 	~Gui2oneFaceDetector();
 
@@ -76,6 +90,7 @@ public:
 
 	
 	cv::dnn::experimental_dnn_34_v11::Net m_dnn_net;
+	
 
 	
 	

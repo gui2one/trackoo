@@ -10,6 +10,10 @@
 #include "ObjectImporter.h"
 #include "MeshObject.h"
 
+
+//#include <opencv2/opencv.hpp>
+//#include <opencv2/cudaimgproc.hpp>
+
 class my_type : public ofxCv::RectFollower, TransformVectors {
 
 public:
@@ -79,7 +83,9 @@ class ofApp : public ofBaseApp{
 
 		ofVideoGrabber grabber;
 		ofVideoPlayer video_player;
-		ofImage of_image;
+
+		ofTexture overlay_1;
+		//ofImage of_image;
 
 		int w_width , w_height, proc_width, proc_height;
 

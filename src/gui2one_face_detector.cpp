@@ -5,6 +5,8 @@
 Gui2oneFaceDetector::Gui2oneFaceDetector(int w, int h)
 {
 
+	printf("DLIB cuda devices : %d\n ",dlib::cuda::get_num_devices());
+	printf("Name : %s\n", dlib::cuda::get_device_name(0).c_str());
 	proc_width = w;
 	proc_height = h;
 
@@ -26,7 +28,11 @@ Gui2oneFaceDetector::~Gui2oneFaceDetector()
 void Gui2oneFaceDetector::initCvDnnNet(std::string proto, std::string caffe_model)
 {
 	// "./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel"
+
+	m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL_FP16 || cv::dnn::DNN_TARGET_OPENCL);
+	
 	m_dnn_net = cv::dnn::readNetFromCaffe(proto, caffe_model);
+	
 }
 
 void Gui2oneFaceDetector::initDlibShapePredictor(std::string landmarks_model)
@@ -34,6 +40,7 @@ void Gui2oneFaceDetector::initDlibShapePredictor(std::string landmarks_model)
 	// Load pose estimation model.
 
 	dlib::deserialize(landmarks_model) >> pose_model;
+	
 }
 
 
@@ -71,12 +78,8 @@ void Gui2oneFaceDetector::initEsitmateTransforms()
 }
 
 std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFaces(cv::Mat& frame)
-{
-
-			
-	
-	
-	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 1.0, cv::Size(proc_width, proc_height), 300, false, false);
+{	
+	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 1.0, cv::Size(proc_width, proc_height), 0, false, false);
 	m_dnn_net.setInput(inputBlob, "data");
 	cv::Mat detection = m_dnn_net.forward("detection_out");
 	cv::Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
@@ -291,7 +294,8 @@ ofMesh Gui2oneFaceDetector::getMesh(dlib::full_object_detection& detection) {
 		27,27,64,63,22,27,63,63,23,22,
 		23,63,24,24,63,62,62,25,24,25,
 		62,61,61,26,25,26,61,60,26,60,
-		16
+		16,30,32,31,32,30,33,33,30,34,
+		34,30,35
 	};
 
 	// forehead indices
@@ -315,7 +319,7 @@ ofMesh Gui2oneFaceDetector::getMesh(dlib::full_object_detection& detection) {
 		glm::vec2(202.717819, 154.502106),glm::vec2(309.282196, 154.502106),glm::vec2(342.397797, 147.016434),
 		glm::vec2(379.524139, 145.232437),glm::vec2(414.786224, 150.183105),glm::vec2(444.377411, 165.738831),
 		glm::vec2(255.791733, 199.971649),glm::vec2(255.997482, 225.746155),glm::vec2(255.795776, 253.484955),
-		glm::vec2(256.368652, 277.725983),glm::vec2(215.528519, 324.049011),glm::vec2(239.851624, 330.269592),
+		glm::vec2(256.368652, 277.726013),glm::vec2(215.528519, 324.049011),glm::vec2(239.851624, 330.269592),
 		glm::vec2(256.127625, 332.184540),glm::vec2(278.261841, 327.282898),glm::vec2(298.727875, 318.555328),
 		glm::vec2(92.551414, 209.043015),glm::vec2(123.845032, 196.293381),glm::vec2(164.247986, 195.820969),
 		glm::vec2(196.671844, 211.563019),glm::vec2(161.510254, 218.718918),glm::vec2(122.117149, 217.811951),
