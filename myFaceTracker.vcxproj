@@ -83,7 +83,7 @@
     <TargetName>$(ProjectName)_debug</TargetName>
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
-    <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1\lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <IncludePath>D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\assimp-install\include;D:\of_v0.10.1_vs2017_release\apps\myApps\myFaceTracker\src\libs\tinyfiledialog;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
@@ -98,7 +98,7 @@
     <OutDir>bin\</OutDir>
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1\lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\CODE\CPP_libs\dlib-install-CUDA\lib;D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\x64\vc15\lib;D:\CODE\CPP_libs\assimp-install\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>D:\CODE\CPP_libs\assimp-install\bin;D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <IncludePath>D:\CODE\CPP_libs\opencv-3.4.6-install_CUDA_OPENCL\include;D:\CODE\CPP_libs\dlib-install-CUDA\include;D:\CODE\CPP_libs\assimp-install\include;D:\of_v0.10.1_vs2017_release\apps\myApps\myFaceTracker\src\libs\tinyfiledialog;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
