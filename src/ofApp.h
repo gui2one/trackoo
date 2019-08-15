@@ -85,6 +85,7 @@ class ofApp : public ofBaseApp{
 		ofVideoPlayer video_player;
 
 		ofTexture overlay_1;
+		ofImage overlay_img;
 		//ofImage of_image;
 
 		int w_width , w_height, proc_width, proc_height;
@@ -118,6 +119,8 @@ class ofApp : public ofBaseApp{
 		std::string video_file_path;
 
 		ofLight light_1;
+
+		std::vector<ofTexture> player_textures;
 
 		
 

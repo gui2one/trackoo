@@ -62,7 +62,7 @@ void ofApp::setup(){
 	w_width = 1920;
 	w_height = 1080;
 
-	proc_width = 600;
+	proc_width = 400;
 	proc_height = (int)((float)proc_width / ((float)w_width /(float)w_height));
 
 	face_detector.setProcessSize(proc_width, proc_height);
@@ -98,6 +98,10 @@ void ofApp::setup(){
 	
 
 	ofLoadImage(overlay_1, "overlay_01.png");
+
+	ofTexture player_texture_17;
+	ofLoadImage(player_texture_17, "joueurs/17_FAITOUT_MAOUASSA.png");
+	player_textures.push_back(player_texture_17);
 	
 	std::vector<glm::vec2> scaled_coords;
 	scaled_coords.reserve(test_mesh.getNumTexCoords());
@@ -196,13 +200,14 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+	float width_ratio = (float)w_width / (float)proc_width;
+	float height_ratio = (float)w_height / (float)proc_height;
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
 	ofDisableLighting();
 
 	gl->draw(video_player, 0, 0, w_width, w_height);
-
+	
 	test_objects.clear();
 	
 	tr_vectors.clear();
@@ -313,8 +318,7 @@ void ofApp::draw(){
 		gl->setFillMode(OF_OUTLINE);
 
 
-		float width_ratio = (float)w_width / (float)proc_width;
-		float height_ratio = (float)w_height / (float)proc_height;
+
 		for (auto label : rect_tracker.getCurrentLabels()) {
 
 			auto cv_rect = rect_tracker.getCurrent(label);
@@ -353,10 +357,36 @@ void ofApp::draw(){
 	
 
 	ofDisableLighting();
-	overlay_1.draw(0, 0, w_width, w_height);
+	ofDisableDepthTest();
 
 
-	//gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
+	gl->draw(overlay_1, 0.0f, 0.0f, 0.0f, (float)w_width, (float)w_height, 1.0f, 1.0f, (float)overlay_1.getWidth(), (float)overlay_1.getHeight());
+	
+	
+	if (im_gui->b_show_player) {
+
+		for (auto follower : rect_tracker.getFollowers()) {
+
+			int label = follower.getLabel();
+			auto rect = rect_tracker.getCurrent(label);
+			ofTexture& tex = player_textures[0];
+			ofVec2f center;
+			center = ofVec2f(rect.x + rect.width / 2.0, rect.y + rect.height / 2.0);
+			//gl->draw(tex, 0.0f, 0.0f, 0.0f, (float)tex.getWidth(), (float)tex.getHeight(), 1.0f, 1.0f, (float)tex.getWidth(), (float)tex.getHeight());
+			gl->draw(
+				tex, // texure 
+				(center.x  * width_ratio) - tex.getWidth() / 2.0, // start X
+				(center.y  * height_ratio) - tex.getHeight() / 2.0, // start Y
+				0.0f, // start Z ?
+				(float)tex.getWidth(), (float)tex.getHeight(), // display size ?
+				1.0f, 1.0f, 
+				(float)tex.getWidth(), (float)tex.getHeight());// texture size
+		}
+	}
+	//overlay_1.draw(0, 0, w_width, w_height);
+
+
+	gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
 }
 
 //--------------------------------------------------------------

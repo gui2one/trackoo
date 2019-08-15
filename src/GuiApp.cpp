@@ -98,6 +98,7 @@ void GuiApp::draw()
 			ImGui::Checkbox("show polylines", &b_show_polylines);
 			ImGui::Checkbox("show 3D heads", &b_show_3d_heads);
 			ImGui::Checkbox("show polymasks", &b_show_polymasks);
+			ImGui::Checkbox("show player", &b_show_player);
 		}
 
 

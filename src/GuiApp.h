@@ -41,7 +41,8 @@ public:
 
 	bool b_show_polylines = false;
 	bool b_show_3d_heads = false;
-	bool b_show_polymasks = true;
+	bool b_show_polymasks = false;
+	bool b_show_player = true;
 
 
 	std::vector<float> plot_values_tx;
