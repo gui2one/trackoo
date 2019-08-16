@@ -68,10 +68,10 @@ void ofApp::setup(){
 	face_detector.setProcessSize(proc_width, proc_height);
 
 
-	//grabber.initGrabber(w_width, w_height);
-	
-	video_player.load(video_file_path);
-	video_player.play();
+	grabber.initGrabber(w_width, w_height);
+	//
+	//video_player.load(video_file_path);
+	//video_player.play();
 
 	//of_image.allocate(w_width, w_height, OF_IMAGE_COLOR);
 	
@@ -143,12 +143,12 @@ void ofApp::update(){
 		im_gui->b_proc_width_changed = false;
 		face_detector.initCvDnnNet();
 	}
-	video_player.update();
+	grabber.update();
 
-	if (video_player.isFrameNew())
+	if (grabber.isFrameNew())
 	{
 
-		cv::Mat frame = ofxCv::toCv(video_player);
+		cv::Mat frame = ofxCv::toCv(grabber);
 		
 		cv::Mat small = cv::Mat(proc_height, proc_width, CV_8UC3);
 
@@ -216,7 +216,7 @@ void ofApp::draw(){
 
 	ofDisableLighting();
 
-	gl->draw(video_player, 0, 0, w_width, w_height);
+	gl->draw(grabber, 0, 0, w_width, w_height);
 	
 	test_objects.clear();
 	
