@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 	int width, height;
 	width = 1024;
 	height = (int)((float)width / (16.0 / 9.0));
-	settings.setSize(1024, 576);
+	settings.setSize(1280, 720);
 	settings.setPosition(ofVec2f(500,100));
 	settings.resizable = false;
 	settings.decorated = true;

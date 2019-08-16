@@ -62,7 +62,7 @@ void ofApp::setup(){
 	w_width = 1920;
 	w_height = 1080;
 
-	proc_width = 400;
+	proc_width = 520;
 	proc_height = (int)((float)proc_width / ((float)w_width /(float)w_height));
 
 	face_detector.setProcessSize(proc_width, proc_height);
@@ -161,6 +161,7 @@ void ofApp::update(){
 
 		all_polylines.clear();
 		all_poly_masks.clear();
+
 		for (auto label : instance_tracker.getCurrentLabels()) {
 
 			auto instance = instance_tracker.getCurrent(label);
@@ -310,9 +311,44 @@ void ofApp::draw(){
 	
 	//light_1.disable();
 
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	ofEnableDepthTest();
+	if (im_gui->b_show_player) {
+
+		int inc = 0;
+		float offset = im_gui->player_heads_scale_offset;
+		for (auto follower : rect_tracker.getFollowers()) {
+
+			int label = follower.getLabel();
+			auto rect = rect_tracker.getCurrent(label);
+			ofTexture& tex = player_textures[0];
+			ofVec2f center;
+
+			float size_ratio_2 =   tex.getHeight() / rect.height;
+			center = ofVec2f(rect.x + rect.width / 2.0, rect.y + rect.height / 2.0);
+			//gl->draw(tex, 0.0f, 0.0f, 0.0f, (float)tex.getWidth(), (float)tex.getHeight(), 1.0f, 1.0f, (float)tex.getWidth(), (float)tex.getHeight());
+			gl->draw(
+				tex, // texture 
+				(rect.x - rect.width * offset) * width_ratio , // start X
+				(rect.y - rect.height * offset)* height_ratio, // start Y
+				(float)inc * 0.1f, // start Z ?
+				(rect.width   + (rect.width  * offset) * 2.0) * width_ratio, // end X
+				(rect.height  + (rect.height * offset) * 2.0) * height_ratio, // end Y
+				1.0f, 1.0f, 
+				(float)tex.getWidth(), (float)tex.getHeight());// texture size
+
+			inc++;
+		}
+	}
+	//overlay_1.draw(0, 0, w_width, w_height);
+
+
 	ofDisableDepthTest();
 	//ofDisableLighting();
-	if (im_gui->b_show_rectangles){
+	if (im_gui->b_show_rectangles) {
 
 
 		gl->setFillMode(OF_OUTLINE);
@@ -353,47 +389,25 @@ void ofApp::draw(){
 		gl->setColor(255, 255, 255);
 		gl->setFillMode(OF_FILLED);
 	}
-		
-	
+
+
 
 	ofDisableLighting();
 	ofDisableDepthTest();
 
-
-	gl->draw(overlay_1, 0.0f, 0.0f, 0.0f, (float)w_width, (float)w_height, 1.0f, 1.0f, (float)overlay_1.getWidth(), (float)overlay_1.getHeight());
-	
-	
-	if (im_gui->b_show_player) {
-
-		for (auto follower : rect_tracker.getFollowers()) {
-
-			int label = follower.getLabel();
-			auto rect = rect_tracker.getCurrent(label);
-			ofTexture& tex = player_textures[0];
-			ofVec2f center;
-			center = ofVec2f(rect.x + rect.width / 2.0, rect.y + rect.height / 2.0);
-			//gl->draw(tex, 0.0f, 0.0f, 0.0f, (float)tex.getWidth(), (float)tex.getHeight(), 1.0f, 1.0f, (float)tex.getWidth(), (float)tex.getHeight());
-			gl->draw(
-				tex, // texure 
-				(center.x  * width_ratio) - tex.getWidth() / 2.0, // start X
-				(center.y  * height_ratio) - tex.getHeight() / 2.0, // start Y
-				0.0f, // start Z ?
-				(float)tex.getWidth(), (float)tex.getHeight(), // display size ?
-				1.0f, 1.0f, 
-				(float)tex.getWidth(), (float)tex.getHeight());// texture size
-		}
+	if (im_gui->b_show_overlay) 
+	{
+		gl->draw(overlay_1, 0.0f, 0.0f, 0.0f, (float)w_width, (float)w_height, 1.0f, 1.0f, (float)overlay_1.getWidth(), (float)overlay_1.getHeight());
 	}
-	//overlay_1.draw(0, 0, w_width, w_height);
-
-
-	gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
+		
+	//gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
 	if (key == OF_KEY_RETURN) {
-		printf(" enter pressed\n");
+		//printf(" enter pressed\n");
 	}
 	if (key == OF_KEY_RETURN && exiting == true) {
 

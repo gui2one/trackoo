@@ -44,6 +44,9 @@ public:
 	bool b_show_polymasks = false;
 	bool b_show_player = true;
 
+	float player_heads_scale_offset = 0.4f;
+
+	bool b_show_overlay = true;
 
 	std::vector<float> plot_values_tx;
 	std::vector<float> plot_values_ty;

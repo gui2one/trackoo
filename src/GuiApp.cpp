@@ -98,7 +98,19 @@ void GuiApp::draw()
 			ImGui::Checkbox("show polylines", &b_show_polylines);
 			ImGui::Checkbox("show 3D heads", &b_show_3d_heads);
 			ImGui::Checkbox("show polymasks", &b_show_polymasks);
+
+			ImGui::Spacing();
 			ImGui::Checkbox("show player", &b_show_player);
+			if (b_show_player) {
+
+				if (ImGui::SliderFloat("offset", &player_heads_scale_offset, 0.0f, 1.0f, "%.2f")) {
+
+
+				}
+			}
+
+			ImGui::Spacing();
+			ImGui::Checkbox("Show Overlay", &b_show_overlay);
 		}
 
 
