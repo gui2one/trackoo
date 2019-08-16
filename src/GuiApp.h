@@ -47,6 +47,8 @@ public:
 	float player_heads_scale_offset = 0.4f;
 
 	bool b_show_overlay = true;
+	bool b_proc_width_changed = false;
+	int proc_width = 520;
 
 	std::vector<float> plot_values_tx;
 	std::vector<float> plot_values_ty;

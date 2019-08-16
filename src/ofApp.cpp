@@ -134,6 +134,15 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
+
+	if (im_gui->b_proc_width_changed) {
+
+		proc_width = im_gui->proc_width;
+		proc_height = (int)((float)proc_width / ((float)w_width / (float)w_height));
+		face_detector.setProcessSize(proc_width, proc_height);
+		im_gui->b_proc_width_changed = false;
+		face_detector.initCvDnnNet();
+	}
 	video_player.update();
 
 	if (video_player.isFrameNew())

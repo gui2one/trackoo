@@ -88,7 +88,8 @@ void GuiApp::draw()
 			}
 		}
 
-		if (ImGui::CollapsingHeader("Controls")) {
+		if (ImGui::CollapsingHeader("Controls")) 
+		{
 			ImGui::DragFloat("Z Offset", &z_offset, 0.1f, -500.0f, 500.0f);
 			ImGui::DragFloat("Global Scale", &global_scale, 0.1f, 0.2f, 10.0f);
 			ImGui::DragFloat("Angle ", &aov, 0.1f, 0.1f, 180.0f);
@@ -111,6 +112,14 @@ void GuiApp::draw()
 
 			ImGui::Spacing();
 			ImGui::Checkbox("Show Overlay", &b_show_overlay);
+
+			ImGui::Spacing();
+			if (ImGui::InputInt("process width", &proc_width)) {
+				
+			}
+			if (ImGui::Button("change")) {
+				b_proc_width_changed = true;
+			}
 		}
 
 

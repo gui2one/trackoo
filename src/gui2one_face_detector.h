@@ -60,7 +60,9 @@ public:
 	~Gui2oneFaceDetector();
 
 	void setProcessSize(int w, int h);
+	void initCvDnnNet();
 	void initCvDnnNet(std::string  proto, std::string caffe_model);
+	
 	void initDlibShapePredictor(std::string landmarks_model);
 
 	void initEsitmateTransforms();

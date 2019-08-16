@@ -25,11 +25,21 @@ Gui2oneFaceDetector::~Gui2oneFaceDetector()
 {
 }
 
+void Gui2oneFaceDetector::initCvDnnNet()
+{
+	// "./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel"
+
+	//m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL_FP16 || cv::dnn::DNN_TARGET_OPENCL);
+
+	m_dnn_net = cv::dnn::readNetFromCaffe("./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel");
+
+}
+
 void Gui2oneFaceDetector::initCvDnnNet(std::string proto, std::string caffe_model)
 {
 	// "./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel"
 
-	m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL_FP16 || cv::dnn::DNN_TARGET_OPENCL);
+	//m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL_FP16 || cv::dnn::DNN_TARGET_OPENCL);
 	
 	m_dnn_net = cv::dnn::readNetFromCaffe(proto, caffe_model);
 	
