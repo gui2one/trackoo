@@ -62,16 +62,13 @@ void ofApp::setup(){
 	w_width = 1920;
 	w_height = 1080;
 
-	proc_width = 520;
-	proc_height = (int)((float)proc_width / ((float)w_width /(float)w_height));
-
-	face_detector.setProcessSize(proc_width, proc_height);
 
 
-	grabber.initGrabber(w_width, w_height);
-	//
-	//video_player.load(video_file_path);
-	//video_player.play();
+
+	//grabber.initGrabber(w_width, w_height);
+	
+	video_player.load(video_file_path);
+	video_player.play();
 
 	//of_image.allocate(w_width, w_height, OF_IMAGE_COLOR);
 	
@@ -99,6 +96,18 @@ void ofApp::setup(){
 
 	ofLoadImage(overlay_1, "overlay_01.png");
 
+	ofTexture player_texture_9;
+	ofLoadImage(player_texture_9, "joueurs/9_JORDAN_SIEBATCHEU.png");
+	player_textures.push_back(player_texture_9);
+
+	ofTexture player_texture_11;
+	ofLoadImage(player_texture_11, "joueurs/11_M_BAYE_NIANG.png");
+	player_textures.push_back(player_texture_11);
+
+	ofTexture player_texture_14;
+	ofLoadImage(player_texture_14, "joueurs/14_BENJAMIN_BOURIGEAUD.png");
+	player_textures.push_back(player_texture_14);
+
 	ofTexture player_texture_17;
 	ofLoadImage(player_texture_17, "joueurs/17_FAITOUT_MAOUASSA.png");
 	player_textures.push_back(player_texture_17);
@@ -124,8 +133,12 @@ void ofApp::setup(){
 	//im_gui.setup();
 
 	//ImGui::GetIO().MouseDrawCursor = false;
-
 	createGuiWindow();
+
+	proc_width = im_gui->proc_width;
+	proc_height = (int)((float)proc_width / ((float)w_width / (float)w_height));
+
+	face_detector.setProcessSize(proc_width, proc_height);
 	
 }
 
@@ -143,12 +156,12 @@ void ofApp::update(){
 		im_gui->b_proc_width_changed = false;
 		face_detector.initCvDnnNet();
 	}
-	grabber.update();
+	video_player.update();
 
-	if (grabber.isFrameNew())
+	if (video_player.isFrameNew())
 	{
 
-		cv::Mat frame = ofxCv::toCv(grabber);
+		cv::Mat frame = ofxCv::toCv(video_player);
 		
 		cv::Mat small = cv::Mat(proc_height, proc_width, CV_8UC3);
 
@@ -216,7 +229,7 @@ void ofApp::draw(){
 
 	ofDisableLighting();
 
-	gl->draw(grabber, 0, 0, w_width, w_height);
+	gl->draw(video_player, 0, 0, w_width, w_height);
 	
 	test_objects.clear();
 	
@@ -333,7 +346,7 @@ void ofApp::draw(){
 
 			int label = follower.getLabel();
 			auto rect = rect_tracker.getCurrent(label);
-			ofTexture& tex = player_textures[0];
+			ofTexture& tex = player_textures[im_gui->current_player_texture];
 			ofVec2f center;
 
 			float size_ratio_2 =   tex.getHeight() / rect.height;
@@ -512,7 +525,7 @@ bool ofApp::createGuiWindow()
 	ofGLFWWindowSettings settings;
 
 	settings.setSize(400, 400);
-	settings.setPosition(ofVec2f(-800, 100));
+	settings.setPosition(ofVec2f(500, 100));
 	settings.resizable = true;
 	settings.windowMode = OF_WINDOW;
 	//settings.shareContextWith = nullptr;

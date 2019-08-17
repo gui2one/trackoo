@@ -44,6 +44,8 @@ public:
 	bool b_show_polymasks = false;
 	bool b_show_player = true;
 
+	int current_player_texture = 0;
+
 	float player_heads_scale_offset = 0.4f;
 
 	bool b_show_overlay = true;

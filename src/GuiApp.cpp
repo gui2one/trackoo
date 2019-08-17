@@ -102,7 +102,35 @@ void GuiApp::draw()
 
 			ImGui::Spacing();
 			ImGui::Checkbox("show player", &b_show_player);
+
+
+			std::vector<std::string> names = {"9_JORDAN_SIEBATCHEU",  "11_M_BAYE_NIANG", "14_BENJAMIN_BOURIGEAUD", "17_FAITOUT_MAOUASSA" };
+			
+			
 			if (b_show_player) {
+				if (ImGui::BeginCombo("choose image", names[current_player_texture].c_str())) {
+
+					if (ImGui::Selectable("9_JORDAN_SIEBATCHEU")) {
+
+						current_player_texture = 0;
+					}
+					if (ImGui::Selectable("11_M_BAYE_NIANG")) {
+
+						current_player_texture = 1;
+					}
+					if (ImGui::Selectable("14_BENJAMIN_BOURIGEAUD")) {
+
+						current_player_texture = 2;
+					}
+					if (ImGui::Selectable("17_FAITOUT_MAOUASSA")) {
+
+						current_player_texture = 3;
+					}
+
+					ImGui::EndCombo();
+
+				}
+
 
 				if (ImGui::SliderFloat("offset", &player_heads_scale_offset, 0.0f, 1.0f, "%.2f")) {
 
