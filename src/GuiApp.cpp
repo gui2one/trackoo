@@ -138,6 +138,10 @@ void GuiApp::draw()
 				}
 			}
 
+
+			ImGui::Spacing();
+			ImGui::Checkbox("Show Hats", &b_show_hats);
+
 			ImGui::Spacing();
 			ImGui::Checkbox("Show Overlay", &b_show_overlay);
 

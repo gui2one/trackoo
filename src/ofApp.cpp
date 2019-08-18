@@ -65,12 +65,12 @@ void ofApp::setup(){
 
 
 
-	//grabber.initGrabber(w_width, w_height);
-	
+	grabber.initGrabber(w_width, w_height);
+	/*
 	video_player.load(video_file_path);
-	video_player.play();
+	video_player.play();*/
 
-	//of_image.allocate(w_width, w_height, OF_IMAGE_COLOR);
+
 	
 
 	
@@ -112,6 +112,16 @@ void ofApp::setup(){
 	ofLoadImage(player_texture_17, "joueurs/17_FAITOUT_MAOUASSA.png");
 	player_textures.push_back(player_texture_17);
 	
+
+
+
+
+	ofTexture hat_texture_1;
+	ofLoadImage(hat_texture_1, "hats/HAT_3.png");
+	hat_textures.push_back(hat_texture_1);
+
+
+
 	std::vector<glm::vec2> scaled_coords;
 	scaled_coords.reserve(test_mesh.getNumTexCoords());
 	for (auto in_coord : test_mesh.getTexCoords()) {
@@ -156,12 +166,12 @@ void ofApp::update(){
 		im_gui->b_proc_width_changed = false;
 		face_detector.initCvDnnNet();
 	}
-	video_player.update();
+	grabber.update();
 
-	if (video_player.isFrameNew())
+	if (grabber.isFrameNew())
 	{
 
-		cv::Mat frame = ofxCv::toCv(video_player);
+		cv::Mat frame = ofxCv::toCv(grabber);
 		
 		cv::Mat small = cv::Mat(proc_height, proc_width, CV_8UC3);
 
@@ -229,7 +239,7 @@ void ofApp::draw(){
 
 	ofDisableLighting();
 
-	gl->draw(video_player, 0, 0, w_width, w_height);
+	gl->draw(grabber, 0, 0, w_width, w_height);
 	
 	test_objects.clear();
 	
@@ -364,6 +374,34 @@ void ofApp::draw(){
 
 			inc++;
 		}
+	}
+
+	if(im_gui->b_show_hats) {
+		int inc = 0;
+		float offset = im_gui->player_heads_scale_offset;
+		for (auto follower : rect_tracker.getFollowers()) {
+
+			int label = follower.getLabel();
+			auto rect = rect_tracker.getCurrent(label);
+			ofTexture& tex = hat_textures[0];
+			ofVec2f center;
+
+			float size_ratio_2 = tex.getHeight() / rect.height;
+			center = ofVec2f(rect.x + rect.width / 2.0, rect.y + rect.height / 2.0);
+			//gl->draw(tex, 0.0f, 0.0f, 0.0f, (float)tex.getWidth(), (float)tex.getHeight(), 1.0f, 1.0f, (float)tex.getWidth(), (float)tex.getHeight());
+			gl->draw(
+				tex, // texture 
+				(rect.x - rect.width * offset) * width_ratio, // start X
+				((rect.y - rect.height * offset) - rect.height*0.1)* height_ratio, // start Y
+				(float)inc * 0.1f, // start Z ?
+				(rect.width + (rect.width  * offset) * 2.0) * width_ratio, // end X
+				(rect.height + (rect.height * offset) * 2.0) * height_ratio * 0.5, // end Y
+				1.0f, 1.0f,
+				(float)tex.getWidth(), (float)tex.getHeight());// texture size
+
+			inc++;
+		}
+
 	}
 	//overlay_1.draw(0, 0, w_width, w_height);
 

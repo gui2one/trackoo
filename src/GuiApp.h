@@ -43,6 +43,7 @@ public:
 	bool b_show_3d_heads = false;
 	bool b_show_polymasks = false;
 	bool b_show_player = true;
+	bool b_show_hats = false;
 
 	int current_player_texture = 0;
 

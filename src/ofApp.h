@@ -121,6 +121,7 @@ class ofApp : public ofBaseApp{
 		ofLight light_1;
 
 		std::vector<ofTexture> player_textures;
+		std::vector<ofTexture> hat_textures;
 		
 
 		
