@@ -65,10 +65,10 @@ void ofApp::setup(){
 
 
 
-	grabber.initGrabber(w_width, w_height);
-	/*
+	//grabber.initGrabber(w_width, w_height);
+	
 	video_player.load(video_file_path);
-	video_player.play();*/
+	video_player.play();
 
 
 	
@@ -139,7 +139,7 @@ void ofApp::setup(){
 	rect_tracker.setPersistence(10);
 	
 
-	std::cout << "cuda devices : " << cv::cuda::getCudaEnabledDeviceCount() << std::endl;
+	std::cout << "OpenCV cuda devices : " << cv::cuda::getCudaEnabledDeviceCount() << std::endl;
 	//im_gui.setup();
 
 	//ImGui::GetIO().MouseDrawCursor = false;
@@ -166,12 +166,12 @@ void ofApp::update(){
 		im_gui->b_proc_width_changed = false;
 		face_detector.initCvDnnNet();
 	}
-	grabber.update();
+	video_player.update();
 
-	if (grabber.isFrameNew())
+	if (video_player.isFrameNew())
 	{
 
-		cv::Mat frame = ofxCv::toCv(grabber);
+		cv::Mat frame = ofxCv::toCv(video_player);
 		
 		cv::Mat small = cv::Mat(proc_height, proc_width, CV_8UC3);
 
@@ -239,7 +239,7 @@ void ofApp::draw(){
 
 	ofDisableLighting();
 
-	gl->draw(grabber, 0, 0, w_width, w_height);
+	gl->draw(video_player, 0, 0, w_width, w_height);
 	
 	test_objects.clear();
 	
@@ -460,7 +460,7 @@ void ofApp::draw(){
 		gl->draw(overlay_1, 0.0f, 0.0f, 0.0f, (float)w_width, (float)w_height, 1.0f, 1.0f, (float)overlay_1.getWidth(), (float)overlay_1.getHeight());
 	}
 		
-	//gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
+	gl->drawString(ofToString(ofGetFrameRate()), 10,30,0.0);
 }
 
 //--------------------------------------------------------------

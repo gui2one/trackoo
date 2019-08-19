@@ -10,9 +10,37 @@ Gui2oneFaceDetector::Gui2oneFaceDetector(int w, int h)
 	proc_width = w;
 	proc_height = h;
 
+
+	if (cv::ocl::haveOpenCL()) {
+
+		printf("opencl Support found\n");
+	}
+
+	cv::ocl::Context context;
+	if (!context.create(cv::ocl::Device::TYPE_GPU))
+	{
+		cout << "Failed creating the context..." << endl;
+		//return;
+	}
+
+	cout << context.ndevices() << " GPU devices are detected." << endl; //This bit provides an overview of the OpenCL devices you have in your computer
+	for (int i = 0; i < context.ndevices(); i++)
+	{
+		cv::ocl::Device device = context.device(i);
+		cout << "name:              " << device.name() << endl;
+		cout << "available:         " << device.available() << endl;
+		cout << "imageSupport:      " << device.imageSupport() << endl;
+		cout << "OpenCL_C_Version:  " << device.OpenCL_C_Version() << endl;
+		cout << endl;
+	}
+
+	cv::ocl::Device(context.device(0)); //Here is where you change which GPU to use (e.g. 0 or 1)
+
+
+	
 	initCvDnnNet("./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel");
-	initDlibShapePredictor("./data/shape_predictor_68_face_landmarks.dat");
-	initEsitmateTransforms();
+	//initDlibShapePredictor("./data/shape_predictor_68_face_landmarks.dat");
+	//initEsitmateTransforms();
 }
 
 void Gui2oneFaceDetector::setProcessSize(int w, int h) 
@@ -31,6 +59,8 @@ void Gui2oneFaceDetector::initCvDnnNet()
 
 	//m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL_FP16 || cv::dnn::DNN_TARGET_OPENCL);
 
+	m_dnn_net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+	m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL);
 	m_dnn_net = cv::dnn::readNetFromCaffe("./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel");
 
 }
@@ -40,7 +70,8 @@ void Gui2oneFaceDetector::initCvDnnNet(std::string proto, std::string caffe_mode
 	// "./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel"
 
 	//m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL_FP16 || cv::dnn::DNN_TARGET_OPENCL);
-	
+	//m_dnn_net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+	//m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL);
 	m_dnn_net = cv::dnn::readNetFromCaffe(proto, caffe_model);
 	
 }
@@ -129,6 +160,48 @@ std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFaces(cv::Mat& frame)
 	return rectangles;
 }
 
+std::vector<dlib::rectangle> Gui2oneFaceDetector::detectFacesGPU(cv::cuda::GpuMat & frame)
+{
+	cv::Mat inputBlob = cv::dnn::blobFromImage(frame, 1.0, cv::Size(proc_width, proc_height), 0, false, false);
+	m_dnn_net.setInput(inputBlob, "data");
+	cv::Mat detection = m_dnn_net.forward("detection_out");
+	cv::Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
+
+
+
+	std::vector<dlib::rectangle> rectangles;
+	rectangles.clear();
+	for (int i = 0; i < detectionMat.rows; i++)
+	{
+
+		float confidence = detectionMat.at<float>(i, 2);
+		float confidenceThreshold = 0.9;
+		int frameWidth = frame.cols;
+		int frameHeight = frame.rows;
+		if (confidence > confidenceThreshold)
+		{
+			//printf("Confidence : %.3f\n", confidence);
+			int x1 = static_cast<int>(detectionMat.at<float>(i, 3) * frameWidth);
+			int y1 = static_cast<int>(detectionMat.at<float>(i, 4) * frameHeight);
+			int x2 = static_cast<int>(detectionMat.at<float>(i, 5) * frameWidth);
+			int y2 = static_cast<int>(detectionMat.at<float>(i, 6) * frameHeight);
+
+
+			//cv::Rect rect(cv::Point(x1, y1), cv::Point(x2, y2));
+			dlib::point p1 = dlib::point(x1, y1);
+			dlib::point p2 = dlib::point(x2, y2);
+			dlib::rectangle rect = dlib::rectangle(p1, p2);
+
+
+			rectangles.push_back(rect);
+			//frame = frame(rect);
+			//cv::resizeWindow("edges", rect.size());
+		}
+	}
+
+	return rectangles;
+}
+
 std::vector<dlib::full_object_detection> Gui2oneFaceDetector::detectLandmarks
 (
 	std::vector<dlib::rectangle>& _rectangles,
@@ -154,7 +227,7 @@ dlib::full_object_detection Gui2oneFaceDetector::detectLandmarks(dlib::rectangle
 	// convert cv::Mat to dlib format
 	dlib::cv_image<dlib::bgr_pixel> cimg(_frame);
 
-
+	
 	dlib::full_object_detection shape;
 
 	shape = pose_model(cimg, _rectangle);

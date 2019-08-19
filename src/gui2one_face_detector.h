@@ -10,6 +10,7 @@
 
 
 #include <opencv2/core/cuda.hpp>
+#include <opencv2/core/ocl.hpp>
 #include <opencv2/cudaarithm.hpp>
 #include <opencv2/cudaimgproc.hpp>
 
@@ -32,6 +33,8 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+
+//#define OPENCV_DNN_OPENCL_ALLOW_ALL_DEVICES = 1
 
 
 struct TransformVectors {
@@ -67,6 +70,7 @@ public:
 
 	void initEsitmateTransforms();
 	std::vector<dlib::rectangle> detectFaces(cv::Mat& frame);
+	std::vector<dlib::rectangle> detectFacesGPU(cv::cuda::GpuMat& frame);
 
 	std::vector<dlib::full_object_detection> detectLandmarks(std::vector<dlib::rectangle>& _rectangles, cv::Mat _frame);
 	dlib::full_object_detection              detectLandmarks(dlib::rectangle& _rectangle, cv::Mat _frame);
