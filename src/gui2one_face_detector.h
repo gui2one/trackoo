@@ -9,11 +9,13 @@
 #include <opencv2/opencv.hpp>
 
 
-#include <opencv2/core/cuda.hpp>
+//#include <opencv2/core/cuda.hpp>
 #include <opencv2/core/ocl.hpp>
-#include <opencv2/cudaarithm.hpp>
-#include <opencv2/cudaimgproc.hpp>
+//#include <opencv2/cudaarithm.hpp>
+//#include <opencv2/cudaimgproc.hpp>
 
+//#include <cuda.h>
+//#include <cudnn.h>
 
 #include <dlib/opencv.h>
 #include <opencv2/highgui/highgui.hpp>
@@ -22,9 +24,9 @@
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
 
-#include <dlib/cuda/gpu_data.h>
-#include <dlib/cuda/cuda_dlib.h>
-#include <dlib/cuda/cuda_utils.h>
+//#include <dlib/cuda/gpu_data.h>
+//#include <dlib/cuda/cuda_dlib.h>
+//#include <dlib/cuda/cuda_utils.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -95,6 +97,9 @@ public:
 
 	
 	cv::dnn::experimental_dnn_34_v11::Net m_dnn_net;
+	
+
+	
 	
 
 	

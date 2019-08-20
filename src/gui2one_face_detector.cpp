@@ -5,36 +5,36 @@
 Gui2oneFaceDetector::Gui2oneFaceDetector(int w, int h)
 {
 
-	printf("DLIB cuda devices : %d\n ",dlib::cuda::get_num_devices());
-	printf("Name : %s\n", dlib::cuda::get_device_name(0).c_str());
+	//printf("DLIB cuda devices : %d\n ",dlib::cuda::get_num_devices());
+	//printf("Name : %s\n", dlib::cuda::get_device_name(0).c_str());
 	proc_width = w;
 	proc_height = h;
 
 
-	if (cv::ocl::haveOpenCL()) {
+	//if (cv::ocl::haveOpenCL()) {
 
-		printf("opencl Support found\n");
-	}
+	//	printf("opencl Support found\n");
+	//}
 
-	cv::ocl::Context context;
-	if (!context.create(cv::ocl::Device::TYPE_GPU))
-	{
-		cout << "Failed creating the context..." << endl;
-		//return;
-	}
+	//cv::ocl::Context context;
+	//if (!context.create(cv::ocl::Device::TYPE_GPU))
+	//{
+	//	cout << "Failed creating the context..." << endl;
+	//	//return;
+	//}
 
-	cout << context.ndevices() << " GPU devices are detected." << endl; //This bit provides an overview of the OpenCL devices you have in your computer
-	for (int i = 0; i < context.ndevices(); i++)
-	{
-		cv::ocl::Device device = context.device(i);
-		cout << "name:              " << device.name() << endl;
-		cout << "available:         " << device.available() << endl;
-		cout << "imageSupport:      " << device.imageSupport() << endl;
-		cout << "OpenCL_C_Version:  " << device.OpenCL_C_Version() << endl;
-		cout << endl;
-	}
+	//cout << context.ndevices() << " GPU devices are detected." << endl; //This bit provides an overview of the OpenCL devices you have in your computer
+	//for (int i = 0; i < context.ndevices(); i++)
+	//{
+	//	cv::ocl::Device device = context.device(i);
+	//	cout << "name:              " << device.name() << endl;
+	//	cout << "available:         " << device.available() << endl;
+	//	cout << "imageSupport:      " << device.imageSupport() << endl;
+	//	cout << "OpenCL_C_Version:  " << device.OpenCL_C_Version() << endl;
+	//	cout << endl;
+	//}
 
-	cv::ocl::Device(context.device(0)); //Here is where you change which GPU to use (e.g. 0 or 1)
+	//cv::ocl::Device(context.device(0)); //Here is where you change which GPU to use (e.g. 0 or 1)
 
 
 	
@@ -62,6 +62,8 @@ void Gui2oneFaceDetector::initCvDnnNet()
 	m_dnn_net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
 	m_dnn_net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL);
 	m_dnn_net = cv::dnn::readNetFromCaffe("./data/deploy.prototxt.txt", "./data/res10_300x300_ssd_iter_140000.caffemodel");
+
+	
 
 }
 
